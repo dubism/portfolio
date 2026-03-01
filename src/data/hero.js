@@ -1,12 +1,12 @@
 const hero = {
   name: 'Matej Dubiš',
   domains: [
-    'Behavioral & Decision Science',
-    'UX Research',
-    'Service Design',
+    'Advanced Design',
+    'Automotive UX',
+    'Physical-Digital Integration',
   ],
   tagline:
-    'Designing systems that work the way people actually think\u2009—\u2009not the way org charts say they should.',
+    'Collaborative designer delivering convincing solutions in complex contexts.',
 };
 
 export default hero;
