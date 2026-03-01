@@ -1,16 +1,14 @@
 const about = {
-  bio: 'Researcher and designer working at the intersection of human behavior, decision-making, and the systems people navigate every day. PhD in behavioral science — trained to ask why people do what they do, and to design better alternatives.',
+  bio: 'UX/UI Designer and Project Leader at Škoda Auto a.s. Working across advanced design, automotive UX, and physical-digital integration — delivering convincing solutions in complex, cross-functional contexts.',
   keywords: [
-    'Nudge Theory',
-    'Choice Architecture',
-    'Decision Science',
-    'Service Design',
-    'UX Research',
-    'Behavioral Experiments',
-    'Journey Mapping',
-    'Qualitative Methods',
+    'Advanced Design',
+    'Automotive UX',
+    'Physical-Digital Integration',
+    'Interaction Design',
+    'UX Strategy',
+    'Project Leadership',
   ],
-  education: 'PhD, Behavioral & Decision Science',
+  education: 'Doctoral research, FA STU BA / VW FCE',
 };
 
 export default about;

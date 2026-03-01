@@ -8,7 +8,7 @@ export default function Contact() {
       <ScrollReveal>
         <h2 className={styles.heading}>Let&apos;s work together</h2>
         <p className={styles.sub}>
-          Have a project where behavior meets design? I&apos;d like to hear about it.
+          Have a complex design challenge? I&apos;d like to hear about it.
         </p>
       </ScrollReveal>
       <ScrollReveal delay={100}>

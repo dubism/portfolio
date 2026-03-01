@@ -1,62 +1,67 @@
 const projects = [
   {
-    id: 'decision-architecture',
-    title: 'Decision Architecture',
-    subtitle: 'Restructuring choice environments for a national healthcare system',
-    tags: ['Behavioral Science', 'Public Sector'],
+    id: 'skoda-in-car-experience',
+    title: 'Škoda In-Car Experience Strategy',
+    subtitle:
+      'Conceptualizing and shaping in-car UX strategy for the entire future portfolio',
+    tags: ['Advanced Design', 'UX Strategy'],
     challenge:
-      'Patients faced overwhelming choices in a complex healthcare enrollment process, leading to decision paralysis and sub-optimal plan selection.',
-    role: 'Lead researcher — designed and ran choice architecture experiments, analyzed behavioral data, delivered policy-ready recommendations.',
+      'Defining in-car UX strategy for the entire future Škoda portfolio — based on research and trends.',
+    role: 'Leading teams which create high-fidelity prototypes for management presentations.',
     outcome:
-      'Simplified enrollment flow reduced drop-off by 34% and increased selection of clinically appropriate plans.',
+      'Strategic direction for the next generation of Škoda in-car experiences.',
     color: 'var(--color-accent)',
   },
   {
-    id: 'service-friction-map',
-    title: 'Service Friction Map',
-    subtitle: 'Identifying invisible friction in municipal service journeys',
-    tags: ['Service Design', 'UX Research'],
+    id: 'skoda-peaq-cockpit',
+    title: 'Škoda Peaq Cockpit',
+    subtitle:
+      'Cockpit design in a cross-functional team from the earliest stage of HMI design',
+    tags: ['Automotive UX', 'Project Leadership'],
     challenge:
-      'A city government wanted to understand why citizens abandoned online service requests mid-process despite a recently redesigned portal.',
-    role: 'UX researcher — conducted journey mapping, behavioral observation, and friction audits across 12 service pathways.',
+      'Tying user needs, design vision, and brand strategy together in the earliest stage of HMI design.',
+    role: 'UX designer and project leader — developing and delivering design presentations for successful buy-in on all company and Group levels.',
     outcome:
-      'Identified 47 friction points; prioritized fixes reduced average task completion time by 40%.',
+      'Coordinated cockpit concept ready for next development phases.',
     color: 'var(--color-accent)',
   },
   {
-    id: 'nudge-framework',
-    title: 'Nudge Framework',
-    subtitle: 'A practical toolkit for ethical behavior change in organizations',
-    tags: ['Behavioral Science', 'Strategy'],
+    id: 'skoda-vision-o',
+    title: 'Škoda Vision O',
+    subtitle:
+      'Near-future focused conceptual UX design',
+    tags: ['Concept Design', 'Physical-Digital Integration'],
     challenge:
-      'Organizations wanted to apply nudge theory but lacked structured methods to design, test, and scale behavioral interventions ethically.',
-    role: 'Framework designer — synthesized academic literature with field experience into an actionable methodology.',
+      'Designing physical and digital interactions with the car and AI assistant — holistic experiences for a concept vehicle.',
+    role: 'UX designer.',
     outcome:
-      'Framework adopted by 3 organizations; used to design 15+ interventions across health, finance, and sustainability.',
+      'Concept showcased as Škoda Vision O.',
     color: 'var(--color-accent)',
   },
   {
-    id: 'research-ops',
-    title: 'Research Ops Platform',
-    subtitle: 'Scaling qualitative research practice across a product organization',
-    tags: ['UX Research', 'Operations'],
+    id: 'skoda-smart-dials',
+    title: 'Škoda Smart Dials',
+    subtitle:
+      'Interaction design for a new set of physical controls',
+    tags: ['Interaction Design', 'Product Delivery'],
     challenge:
-      'A growing product team conducted research in silos — duplicated efforts, inconsistent methods, and insights that never reached decision-makers.',
-    role: 'Research operations lead — designed the research repository, participant management system, and insight-sharing workflows.',
+      'Designing interaction for a given set of controls and expected feature set — coordinating UX, UI, and motion design across 2 modules in multiple user testing iterations.',
+    role: 'UX designer and project leader — reacting to user and feasibility issues, delivering through implementation.',
     outcome:
-      'Research velocity doubled; insight reuse increased 5x; product teams reported higher confidence in design decisions.',
+      'Successful product shipped to production.',
     color: 'var(--color-accent)',
   },
   {
-    id: 'behavioral-audit',
-    title: 'Behavioral Audit',
-    subtitle: 'Diagnosing behavioral barriers in a financial product onboarding flow',
-    tags: ['Behavioral Science', 'Fintech'],
+    id: 'generative-methods',
+    title: 'Generative Methods in Automotive Design',
+    subtitle:
+      'Doctoral research at FA STU BA, in collaboration with VW FCE',
+    tags: ['Research', 'Design Methods'],
     challenge:
-      'A fintech company saw high interest but low conversion — users started onboarding but didn\'t complete it.',
-    role: 'Behavioral auditor — mapped cognitive load, identified default effects, and designed friction-reducing interventions.',
+      'Exploring new ways of designing and applying them to real problems in the automotive industry.',
+    role: 'Doctoral researcher — evangelizing and teaching new methods in actual industry contexts.',
     outcome:
-      'Three targeted nudges increased onboarding completion by 28% without changing the underlying product.',
+      'New generative design methods validated and applied in industry.',
     color: 'var(--color-accent)',
   },
 ];
