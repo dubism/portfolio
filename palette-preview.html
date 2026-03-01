@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Palette Options — matejdubis.com</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #1a1a1a;
+    color: #e0e0e0;
+    padding: 48px 24px;
+    line-height: 1.5;
+  }
+
+  .intro {
+    max-width: 720px;
+    margin: 0 auto 64px;
+    text-align: center;
+  }
+  .intro h1 {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    letter-spacing: -0.5px;
+  }
+  .intro p {
+    font-size: 15px;
+    color: #999;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .palettes {
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .palette-section {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+
+  @media (max-width: 800px) {
+    .palette-section { grid-template-columns: 1fr; gap: 24px; }
+  }
+
+  .palette-meta h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    letter-spacing: -0.3px;
+  }
+  .palette-meta .subtitle {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 16px;
+    font-style: italic;
+    font-family: 'Source Serif 4', serif;
+  }
+  .palette-meta .rationale {
+    font-size: 13px;
+    color: #aaa;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .swatches {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .swatch {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    position: relative;
+    cursor: default;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .swatch .tooltip {
+    display: none;
+    position: absolute;
+    bottom: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    font-family: 'Inter', monospace;
+    color: #999;
+    white-space: nowrap;
+    background: #222;
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+  .swatch:hover .tooltip { display: block; }
+
+  /* Mock site preview */
+  .preview {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+
+  .preview-hero {
+    padding: 48px 40px 40px;
+    position: relative;
+  }
+  .preview-hero .name {
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    margin-bottom: 4px;
+  }
+  .preview-hero .title {
+    font-size: 14px;
+    font-weight: 400;
+    margin-bottom: 20px;
+  }
+  .preview-hero .tagline {
+    font-size: 13px;
+    font-family: 'Source Serif 4', serif;
+    font-style: italic;
+    max-width: 320px;
+    line-height: 1.5;
+  }
+
+  .preview-cards {
+    padding: 0 40px 40px;
+    display: flex;
+    gap: 16px;
+  }
+  .preview-card {
+    flex: 1;
+    border-radius: 8px;
+    padding: 20px;
+    min-height: 100px;
+  }
+  .preview-card .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .preview-card .card-desc {
+    font-size: 11px;
+    line-height: 1.5;
+  }
+  .preview-card .card-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 99px;
+    margin-top: 10px;
+  }
+
+  .preview-cta {
+    padding: 0 40px 36px;
+  }
+  .preview-cta a {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 24px;
+    border-radius: 6px;
+    text-decoration: none;
+    letter-spacing: 0.2px;
+  }
+
+  /* ============================================ */
+  /* PALETTE 1: DARK STUDY                        */
+  /* ============================================ */
+  .p1 .preview-hero { background: #1C2128; }
+  .p1 .preview-hero .name { color: #E8E2D6; }
+  .p1 .preview-hero .title { color: #C8A96E; }
+  .p1 .preview-hero .tagline { color: #9A9487; }
+
+  .p1 .preview-cards { background: #1C2128; }
+  .p1 .preview-card { background: #252B35; border: 1px solid #333A45; }
+  .p1 .preview-card .card-title { color: #E8E2D6; }
+  .p1 .preview-card .card-desc { color: #8A8680; }
+  .p1 .preview-card .card-tag { background: rgba(200,169,110,0.15); color: #C8A96E; }
+
+  .p1 .preview-cta { background: #1C2128; }
+  .p1 .preview-cta a { background: #C8A96E; color: #1C2128; }
+
+  /* ============================================ */
+  /* PALETTE 2: INK & STONE                       */
+  /* ============================================ */
+  .p2 .preview-hero { background: #F2EDE7; }
+  .p2 .preview-hero .name { color: #2C2C2C; }
+  .p2 .preview-hero .title { color: #6B4C3B; }
+  .p2 .preview-hero .tagline { color: #6E6862; }
+
+  .p2 .preview-cards { background: #F2EDE7; }
+  .p2 .preview-card { background: #E8E1D8; border: 1px solid #D4CCC2; }
+  .p2 .preview-card .card-title { color: #2C2C2C; }
+  .p2 .preview-card .card-desc { color: #6E6862; }
+  .p2 .preview-card .card-tag { background: rgba(107,76,59,0.12); color: #6B4C3B; }
+
+  .p2 .preview-cta { background: #F2EDE7; }
+  .p2 .preview-cta a { background: #2C2C2C; color: #F2EDE7; }
+
+  /* ============================================ */
+  /* PALETTE 3: MIDNIGHT BOTANICAL                */
+  /* ============================================ */
+  .p3 .preview-hero { background: #0F1419; }
+  .p3 .preview-hero .name { color: #F0EBE3; }
+  .p3 .preview-hero .title { color: #7EA88B; }
+  .p3 .preview-hero .tagline { color: #8A8580; }
+
+  .p3 .preview-cards { background: #0F1419; }
+  .p3 .preview-card { background: #171E26; border: 1px solid #243040; }
+  .p3 .preview-card .card-title { color: #F0EBE3; }
+  .p3 .preview-card .card-desc { color: #8A8580; }
+  .p3 .preview-card .card-tag { background: rgba(126,168,139,0.12); color: #7EA88B; }
+
+  .p3 .preview-cta { background: #0F1419; }
+  .p3 .preview-cta a { background: #7EA88B; color: #0F1419; }
+
+  /* Divider */
+  .divider {
+    border: none;
+    border-top: 1px solid #333;
+    margin: 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="intro">
+  <h1>Three Palettes for Matej</h1>
+  <p>Hover over swatches for hex values. Each preview shows how the hero + project cards + CTA would actually feel.</p>
+</div>
+
+<div class="palettes">
+
+  <!-- PALETTE 1 -->
+  <section class="palette-section">
+    <div class="palette-meta">
+      <h2>1 — Dark Study</h2>
+      <div class="subtitle">Late-night research energy</div>
+      <div class="rationale">
+        Deep blue-charcoal base with warm gold accents. Evokes: a lit desk in a dark library, brass reading lamps, thesis drafts at 2am.
+        The gold isn't flashy — it's the color of worn book spines.
+        Says: "I think deeply about things."
+      </div>
+      <div class="swatches">
+        <div class="swatch" style="background:#1C2128"><span class="tooltip">#1C2128 bg</span></div>
+        <div class="swatch" style="background:#252B35"><span class="tooltip">#252B35 surface</span></div>
+        <div class="swatch" style="background:#333A45"><span class="tooltip">#333A45 border</span></div>
+        <div class="swatch" style="background:#E8E2D6"><span class="tooltip">#E8E2D6 text</span></div>
+        <div class="swatch" style="background:#9A9487"><span class="tooltip">#9A9487 muted</span></div>
+        <div class="swatch" style="background:#C8A96E"><span class="tooltip">#C8A96E accent</span></div>
+      </div>
+    </div>
+    <div class="preview p1">
+      <div class="preview-hero">
+        <div class="name">Matej Dubiš</div>
+        <div class="title">Behavioral & Decision Science · UX Research · Service Design</div>
+        <div class="tagline">Designing systems that work the way people actually think — not the way org charts say they should.</div>
+      </div>
+      <div class="preview-cards">
+        <div class="preview-card">
+          <div class="card-title">Decision Architecture</div>
+          <div class="card-desc">Restructuring choice environments for a national healthcare system</div>
+          <div class="card-tag">Behavioral Science</div>
+        </div>
+        <div class="preview-card">
+          <div class="card-title">Service Friction Map</div>
+          <div class="card-desc">Identifying invisible friction in municipal service journeys</div>
+          <div class="card-tag">Service Design</div>
+        </div>
+      </div>
+      <div class="preview-cta">
+        <a href="#">Get in touch →</a>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- PALETTE 2 -->
+  <section class="palette-section">
+    <div class="palette-meta">
+      <h2>2 — Ink & Stone</h2>
+      <div class="subtitle">Editorial warmth, European restraint</div>
+      <div class="rationale">
+        Warm parchment base with deep brown and charcoal. Evokes: letterpress prints, Viennese coffee houses, well-typeset journals.
+        No bright accents — the accent IS the darkness of the ink against warm stone.
+        Says: "I let the work speak."
+      </div>
+      <div class="swatches">
+        <div class="swatch" style="background:#F2EDE7"><span class="tooltip">#F2EDE7 bg</span></div>
+        <div class="swatch" style="background:#E8E1D8"><span class="tooltip">#E8E1D8 surface</span></div>
+        <div class="swatch" style="background:#D4CCC2"><span class="tooltip">#D4CCC2 border</span></div>
+        <div class="swatch" style="background:#2C2C2C"><span class="tooltip">#2C2C2C text</span></div>
+        <div class="swatch" style="background:#6E6862"><span class="tooltip">#6E6862 muted</span></div>
+        <div class="swatch" style="background:#6B4C3B"><span class="tooltip">#6B4C3B accent</span></div>
+      </div>
+    </div>
+    <div class="preview p2">
+      <div class="preview-hero">
+        <div class="name">Matej Dubiš</div>
+        <div class="title">Behavioral & Decision Science · UX Research · Service Design</div>
+        <div class="tagline">Designing systems that work the way people actually think — not the way org charts say they should.</div>
+      </div>
+      <div class="preview-cards">
+        <div class="preview-card">
+          <div class="card-title">Decision Architecture</div>
+          <div class="card-desc">Restructuring choice environments for a national healthcare system</div>
+          <div class="card-tag">Behavioral Science</div>
+        </div>
+        <div class="preview-card">
+          <div class="card-title">Service Friction Map</div>
+          <div class="card-desc">Identifying invisible friction in municipal service journeys</div>
+          <div class="card-tag">Service Design</div>
+        </div>
+      </div>
+      <div class="preview-cta">
+        <a href="#">Get in touch →</a>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- PALETTE 3 -->
+  <section class="palette-section">
+    <div class="palette-meta">
+      <h2>3 — Midnight Botanical</h2>
+      <div class="subtitle">Not Škoda green — forest-at-dusk green</div>
+      <div class="rationale">
+        Near-black base with a muted sage-green accent. Evokes: moss on old stone, a calm walk through data, the moment before an insight lands.
+        The green is desaturated enough to feel intellectual, not environmental.
+        Says: "I find patterns others miss."
+      </div>
+      <div class="swatches">
+        <div class="swatch" style="background:#0F1419"><span class="tooltip">#0F1419 bg</span></div>
+        <div class="swatch" style="background:#171E26"><span class="tooltip">#171E26 surface</span></div>
+        <div class="swatch" style="background:#243040"><span class="tooltip">#243040 border</span></div>
+        <div class="swatch" style="background:#F0EBE3"><span class="tooltip">#F0EBE3 text</span></div>
+        <div class="swatch" style="background:#8A8580"><span class="tooltip">#8A8580 muted</span></div>
+        <div class="swatch" style="background:#7EA88B"><span class="tooltip">#7EA88B accent</span></div>
+      </div>
+    </div>
+    <div class="preview p3">
+      <div class="preview-hero">
+        <div class="name">Matej Dubiš</div>
+        <div class="title">Behavioral & Decision Science · UX Research · Service Design</div>
+        <div class="tagline">Designing systems that work the way people actually think — not the way org charts say they should.</div>
+      </div>
+      <div class="preview-cards">
+        <div class="preview-card">
+          <div class="card-title">Decision Architecture</div>
+          <div class="card-desc">Restructuring choice environments for a national healthcare system</div>
+          <div class="card-tag">Behavioral Science</div>
+        </div>
+        <div class="preview-card">
+          <div class="card-title">Service Friction Map</div>
+          <div class="card-desc">Identifying invisible friction in municipal service journeys</div>
+          <div class="card-tag">Service Design</div>
+        </div>
+      </div>
+      <div class="preview-cta">
+        <a href="#">Get in touch →</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div style="text-align:center; margin-top:80px; padding-bottom:48px;">
+  <p style="font-size:13px; color:#666;">Open this file in a browser: <code style="color:#aaa;">palette-preview.html</code></p>
+</div>
+
+</body>
+</html>
