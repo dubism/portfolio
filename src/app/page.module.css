@@ -13,18 +13,8 @@
   margin-bottom: var(--space-7);
 }
 
-.projectsGrid {
-  display: grid;
-  gap: var(--space-6);
-}
-
-@media (min-width: 768px) {
-  .projectsGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .projectsGrid > *:last-child:nth-child(odd) {
-    grid-column: 1 / -1;
-    max-width: calc(50% - var(--space-3));
-  }
+/* Showcases stack vertically; border-top on each is the visual separator */
+.showcaseList {
+  display: flex;
+  flex-direction: column;
 }
