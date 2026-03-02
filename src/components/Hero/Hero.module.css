@@ -6,6 +6,7 @@
   padding: var(--space-7) var(--space-5);
   max-width: var(--max-width);
   margin: 0 auto;
+  position: relative;
 }
 
 .name {
@@ -47,18 +48,15 @@
 }
 
 .scrollHint {
-  margin-top: var(--space-9);
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
+  position: absolute;
+  bottom: var(--space-6);
+  left: 50%;
+  transform: translateX(-50%);
   color: var(--color-text-muted);
-  font-size: var(--text-small);
-  letter-spacing: 1px;
-  text-transform: uppercase;
+  animation: bounce 1.8s ease-in-out infinite;
 }
 
-.scrollLine {
-  width: 32px;
-  height: 1px;
-  background: var(--color-border);
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%       { transform: translateX(-50%) translateY(6px); }
 }

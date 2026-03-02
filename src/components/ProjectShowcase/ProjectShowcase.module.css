@@ -81,6 +81,17 @@
   line-height: 1.65;
 }
 
+/* ===== MOBILE: images bleed to viewport edges ===== */
+
+@media (max-width: 767px) {
+  .imagePlaceholder {
+    margin-left: calc(-1 * var(--space-5));
+    margin-right: calc(-1 * var(--space-5));
+    width: calc(100% + 2 * var(--space-5));
+    border-radius: 0;
+  }
+}
+
 /* ===== DESKTOP: sticky left header, scrolling right images ===== */
 
 @media (min-width: 768px) {

@@ -4,12 +4,14 @@ import About from '@/components/About/About';
 import Contact from '@/components/Contact/Contact';
 import SectionDivider from '@/components/SectionDivider/SectionDivider';
 import ScrollReveal from '@/components/ScrollReveal/ScrollReveal';
+import FloatingCTA from '@/components/FloatingCTA/FloatingCTA';
 import projects from '@/data/projects';
 import styles from './page.module.css';
 
 export default function Home() {
   return (
     <>
+      <FloatingCTA />
       <Hero />
       <SectionDivider />
       <section className={styles.projects} id="work">
