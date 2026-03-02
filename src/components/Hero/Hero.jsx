@@ -18,12 +18,11 @@ export default function Hero() {
       <ScrollReveal delay={200}>
         <p className={styles.tagline}>{hero.tagline}</p>
       </ScrollReveal>
-      <ScrollReveal delay={400}>
-        <div className={styles.scrollHint}>
-          <span className={styles.scrollLine} />
-          <span>Scroll</span>
-        </div>
-      </ScrollReveal>
+      <div className={styles.scrollHint} aria-hidden="true">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </div>
     </section>
   );
 }
