@@ -1,5 +1,5 @@
 import Hero from '@/components/Hero/Hero';
-import ProjectCard from '@/components/ProjectCard/ProjectCard';
+import ProjectShowcase from '@/components/ProjectShowcase/ProjectShowcase';
 import About from '@/components/About/About';
 import Contact from '@/components/Contact/Contact';
 import SectionDivider from '@/components/SectionDivider/SectionDivider';
@@ -16,9 +16,9 @@ export default function Home() {
         <ScrollReveal>
           <div className={styles.projectsLabel}>Selected Work</div>
         </ScrollReveal>
-        <div className={styles.projectsGrid}>
-          {projects.map((project, i) => (
-            <ProjectCard key={project.id} project={project} index={i} />
+        <div className={styles.showcaseList}>
+          {projects.map((project) => (
+            <ProjectShowcase key={project.id} project={project} />
           ))}
         </div>
       </section>
