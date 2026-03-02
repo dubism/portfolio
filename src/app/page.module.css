@@ -1,6 +1,6 @@
 .projects {
   padding: var(--space-9) var(--space-5) var(--space-10);
-  max-width: var(--max-width);
+  max-width: 1320px;
   margin: 0 auto;
 }
 
@@ -17,4 +17,15 @@
 .showcaseList {
   display: flex;
   flex-direction: column;
+}
+
+@media (max-width: 767px) {
+  .projects {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .projectsLabel {
+    padding-left: var(--space-5);
+  }
 }

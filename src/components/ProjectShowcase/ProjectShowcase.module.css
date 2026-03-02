@@ -1,119 +1,248 @@
-/* ===== PROJECT SHOWCASE ===== */
+/* ===== PROJECT SHOWCASE — PARALLAX REDESIGN ===== */
 
 .showcase {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-7);
-  padding: var(--space-9) 0;
   border-top: 1px solid var(--color-border);
+  padding-top: var(--space-7);
+  margin-bottom: var(--space-5);
 }
 
-/* ===== PROJECT HEADER (name + headline) ===== */
+/* ===== DESKTOP TEXT COLUMN (hidden on mobile) ===== */
 
-.projectHeader {
+.textColumn {
+  display: none;
+}
+
+/* ===== IMAGE COLUMN ===== */
+
+.imageColumn {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
 }
 
-.projectLabel {
-  font-size: var(--text-small);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: var(--color-accent);
+/* ===== IMAGE BLOCK ===== */
+
+.imageBlock {
+  position: relative;
+  overflow: hidden;
+  height: 75vh;
+  min-height: 400px;
 }
 
-.projectName {
-  font-size: var(--text-h1);
-  font-weight: 700;
-  color: var(--color-text);
-  letter-spacing: -0.5px;
-  line-height: 1.15;
-}
-
-.projectHeadline {
-  font-family: var(--font-serif);
-  font-size: var(--text-body);
-  color: var(--color-text-secondary);
-  line-height: 1.65;
-  max-width: 36ch;
-}
-
-/* ===== IMAGE-DESCRIPTION PAIRS ===== */
-
-.imagePairs {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-8);
-}
-
-.imagePair {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-}
-
-/* Placeholder: clearly labeled image block */
-.imagePlaceholder {
+.imageFrame {
   width: 100%;
-  aspect-ratio: 16 / 9;
-  background: var(--color-surface-light);
-  border: 1.5px dashed var(--color-border);
-  border-radius: var(--radius-md);
+  height: 100%;
+  overflow: hidden;
+}
+
+.imageInner {
+  width: 100%;
+  height: 100%;
+  will-change: transform;
+}
+
+.img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.placeholder {
+  width: 100%;
+  height: 100%;
+  background: var(--color-surface-dark);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.placeholderLabel {
-  font-size: var(--text-small);
-  color: var(--color-text-secondary);
+.placeholderText {
+  font-size: var(--text-caption);
+  color: var(--color-text-muted);
   font-style: italic;
-  padding: var(--space-3);
+  padding: var(--space-5);
   text-align: center;
+  max-width: 260px;
 }
 
-.imageDescription {
+/* ===== MOBILE OVERLAYS ===== */
+
+.mobileHeader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  padding: var(--space-6) var(--space-5) var(--space-8);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), transparent);
+}
+
+.mobileLabel {
+  font-size: var(--text-small);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--color-accent-light);
+  margin-bottom: var(--space-2);
+}
+
+.mobileName {
+  font-size: var(--text-h2);
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+  margin-bottom: var(--space-2);
+}
+
+.mobileHeadline {
   font-family: var(--font-serif);
   font-size: var(--text-body);
-  color: var(--color-text-secondary);
-  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.5;
 }
 
-/* ===== MOBILE: images bleed to viewport edges ===== */
-
-@media (max-width: 767px) {
-  .imagePlaceholder {
-    margin-left: calc(-1 * var(--space-5));
-    margin-right: calc(-1 * var(--space-5));
-    width: calc(100% + 2 * var(--space-5));
-    border-radius: 0;
-  }
+.mobileOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  padding: var(--space-8) var(--space-5) var(--space-5);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
 }
 
-/* ===== DESKTOP: sticky left header, scrolling right images ===== */
+.mobileDesc {
+  font-family: var(--font-serif);
+  font-size: var(--text-caption);
+  color: rgba(255, 255, 255, 0.92);
+  line-height: 1.6;
+}
+
+/* ===== DESKTOP LAYOUT ===== */
 
 @media (min-width: 768px) {
   .showcase {
-    flex-direction: row;
+    display: flex;
     align-items: flex-start;
-    gap: var(--space-9);
+    gap: var(--space-8);
+    padding-top: var(--space-9);
+    margin-bottom: var(--space-9);
   }
 
-  /* The ScrollReveal wrapper around the header becomes the sticky column */
-  .stickyHeader {
-    flex: 0 0 36%;
+  /* --- Text column: sticky with fading descriptions --- */
+
+  .textColumn {
+    display: block;
+    flex: 0 0 32%;
+    align-self: stretch;
+  }
+
+  .textSticky {
     position: sticky;
-    top: var(--space-8);
+    top: 25vh;
+  }
+
+  .projectLabel {
+    font-size: var(--text-small);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--color-accent);
+    margin-bottom: var(--space-3);
+  }
+
+  .projectName {
+    font-size: var(--text-h1);
+    font-weight: 700;
+    color: var(--color-text);
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+    margin-bottom: var(--space-3);
   }
 
   .projectHeadline {
-    max-width: none;
+    font-family: var(--font-serif);
+    font-size: var(--text-body);
+    color: var(--color-text-secondary);
+    line-height: 1.65;
+    margin-bottom: var(--space-7);
   }
 
-  .imagePairs {
+  .descriptions {
+    position: relative;
+    min-height: 140px;
+  }
+
+  .desc {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+    pointer-events: none;
+  }
+
+  .descActive {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .descText {
+    font-family: var(--font-serif);
+    font-size: var(--text-body);
+    color: var(--color-text-secondary);
+    line-height: 1.65;
+    margin-bottom: var(--space-3);
+  }
+
+  .counter {
+    font-size: var(--text-small);
+    color: var(--color-border);
+    font-weight: 500;
+    letter-spacing: 1px;
+  }
+
+  /* --- Image column: large scrolling images --- */
+
+  .imageColumn {
     flex: 1;
     min-width: 0;
+    gap: var(--space-6);
+  }
+
+  .imageBlock {
+    height: auto;
+    min-height: 80vh;
+    overflow: visible;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    scroll-snap-align: center;
+  }
+
+  .imageFrame {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    border-radius: var(--radius-lg);
+  }
+
+  .imageInner {
+    transform: none !important;
+  }
+
+  .placeholder {
+    border-radius: var(--radius-lg);
+  }
+
+  /* Hide mobile-only overlays */
+
+  .mobileHeader,
+  .mobileOverlay {
+    display: none;
   }
 }
