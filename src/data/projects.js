@@ -1,15 +1,55 @@
+/**
+ * ============================================================
+ * PROJECT DATA — Adding / Editing Projects
+ * ============================================================
+ *
+ * HOW TO ADD A NEW PROJECT
+ * ------------------------
+ * 1. Prepare images:
+ *    - Format: JPG or WebP (prefer WebP for smaller files).
+ *    - Dimensions: at least 1600 px wide; 1:1 or 4:3 aspect ratio works best.
+ *    - Optimise before committing — aim for < 300 KB per image.
+ *
+ * 2. Place images:
+ *    - Create a folder under  public/images/<project-id>/
+ *      (e.g.  public/images/my-new-project/)
+ *    - Drop the image files there (01.webp, 02.webp, ...).
+ *
+ * 3. Add a project entry below:
+ *    Copy an existing object and fill in:
+ *      id        — unique kebab-case slug (used as a key)
+ *      name      — display title
+ *      headline  — one-liner shown below the title
+ *      tags      — array of short labels (tech, discipline, etc.)
+ *      images    — array of { src, alt, description }
+ *        src: path relative to /public, e.g. "/images/my-project/01.webp"
+ *             set to null to show a placeholder
+ *        alt: accessible alternative text
+ *        description: text shown alongside the image on desktop
+ *
+ * 4. Build / preview:
+ *      npm run dev        — local preview at localhost:3000
+ *      npm run build      — production build (images are copied from /public)
+ *
+ *    Next.js serves everything inside /public as-is; no extra
+ *    build step is needed for images.
+ *
+ * ============================================================
+ */
+
 const projects = [
   {
     id: 'skoda-in-car-experience',
-    name: 'Škoda In-Car Experience Strategy',
+    name: '\u0160koda In-Car Experience Strategy',
     headline:
       'Conceptualizing and shaping in-car UX strategy for the entire future portfolio',
+    tags: ['UX Strategy', 'Automotive', 'Research Synthesis'],
     images: [
       {
         src: null,
         alt: 'Strategic framework overview',
         description:
-          'Strategic framework mapping user journeys across the full Škoda vehicle portfolio, grounded in trend and research synthesis.',
+          'Strategic framework mapping user journeys across the full \u0160koda vehicle portfolio, grounded in trend and research synthesis.',
       },
       {
         src: null,
@@ -21,15 +61,16 @@ const projects = [
         src: null,
         alt: 'Future portfolio UX direction',
         description:
-          'Outcome: a cohesive strategic direction for the next generation of Škoda in-car experiences, ready for hand-off to product teams.',
+          'Outcome: a cohesive strategic direction for the next generation of \u0160koda in-car experiences, ready for hand-off to product teams.',
       },
     ],
   },
   {
     id: 'skoda-peaq-cockpit',
-    name: 'Škoda Peaq Cockpit',
+    name: '\u0160koda Peaq Cockpit',
     headline:
       'Cockpit design in a cross-functional team from the earliest stage of HMI design',
+    tags: ['HMI Design', 'Cross-functional', 'Brand Strategy'],
     images: [
       {
         src: null,
@@ -47,8 +88,9 @@ const projects = [
   },
   {
     id: 'skoda-vision-o',
-    name: 'Škoda Vision O',
+    name: '\u0160koda Vision O',
     headline: 'Near-future focused conceptual UX design',
+    tags: ['Concept Design', 'Interaction Design', 'AI Integration'],
     images: [
       {
         src: null,
@@ -60,14 +102,15 @@ const projects = [
         src: null,
         alt: 'Vision O concept showcase',
         description:
-          'Concept showcased as Škoda Vision O, exploring near-future human-car relationships through seamless physical and digital touchpoints.',
+          'Concept showcased as \u0160koda Vision O, exploring near-future human-car relationships through seamless physical and digital touchpoints.',
       },
     ],
   },
   {
     id: 'skoda-smart-dials',
-    name: 'Škoda Smart Dials',
+    name: '\u0160koda Smart Dials',
     headline: 'Interaction design for a new set of physical controls',
+    tags: ['Interaction Design', 'User Testing', 'Production Ship'],
     images: [
       {
         src: null,
@@ -93,6 +136,7 @@ const projects = [
     id: 'generative-methods',
     name: 'Generative Methods in Automotive Design',
     headline: 'Doctoral research at FA STU BA, in collaboration with VW FCE',
+    tags: ['Research', 'Generative Design', 'Academia'],
     images: [
       {
         src: null,
