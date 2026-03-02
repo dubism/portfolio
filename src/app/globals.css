@@ -76,6 +76,13 @@ a {
   --radius-lg: 16px;
 }
 
+/* ===== DESKTOP SCROLL SNAP (gentle) ===== */
+@media (min-width: 768px) {
+  html {
+    scroll-snap-type: y proximity;
+  }
+}
+
 /* ===== SCROLL REVEAL ===== */
 .reveal {
   opacity: 0;
