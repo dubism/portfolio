@@ -6,7 +6,7 @@ export default function Contact() {
   return (
     <section className={styles.section} id="contact">
       <ScrollReveal>
-        <h2 className={styles.heading}>Let&apos;s work together</h2>
+        <h2 className={styles.heading}>Get in touch</h2>
         <p className={styles.sub}>
           Have a complex design challenge? I&apos;d like to hear about it.
         </p>

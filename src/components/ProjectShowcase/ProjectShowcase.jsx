@@ -3,6 +3,32 @@
 import { useEffect, useRef, useCallback } from 'react';
 import styles from './ProjectShowcase.module.css';
 
+// ---- Fix 2: Squircle path computation ----
+// c = visual corner radius; curve starts at c*1.6 from corner (iOS-style smooth start)
+function squirclePath(w, h, c) {
+  const e = c * 1.6; // curve start distance from corner along edge
+  const d = c * 0.6; // bezier handle distance from curve endpoint
+  const ex = Math.min(e, w / 2);
+  const ey = Math.min(e, h / 2);
+  const ratio = e > 0 ? Math.min(ex, ey) / e : 1;
+  const dx = d * ratio;
+  const dy = d * ratio;
+  return [
+    `M ${ex} 0`,
+    `L ${w - ex} 0`,
+    `C ${w - dx} 0 ${w} ${dy} ${w} ${ey}`,
+    `L ${w} ${h - ey}`,
+    `C ${w} ${h - dy} ${w - dx} ${h} ${w - ex} ${h}`,
+    `L ${ex} ${h}`,
+    `C ${dx} ${h} 0 ${h - dy} 0 ${h - ey}`,
+    `L 0 ${ey}`,
+    `C 0 ${dy} ${dx} 0 ${ex} 0`,
+    'Z',
+  ].join(' ');
+}
+
+const SQUIRCLE_C = 16;
+
 export default function ProjectShowcase({ project }) {
   const showcaseRef = useRef(null);
   const imageColumnRef = useRef(null);
@@ -11,12 +37,27 @@ export default function ProjectShowcase({ project }) {
   const chipsRef = useRef(null);
   const clusterRef = useRef(null);
 
-  // ---- Desktop: scroll-scrubbed text animation ----
+  // ---- Fix 1: Desktop scroll-scrubbed text animation ----
+  // Single transitionProgress (0→1) drives both outgoing and incoming text.
+  // At transitionProgress === 0.5, both texts are opacity 0.
   const updateDesktop = useCallback(() => {
     const images = imageRefs.current.filter(Boolean);
     const textBlocks = textBlocksRef.current.filter(Boolean);
     const count = images.length;
     if (count === 0) return;
+
+    const vh = window.innerHeight;
+    const ENTER_START = 0.2;
+    const ENTER_END = 0.35;
+    const EXIT_START = 0.65;
+    const EXIT_END = 0.8;
+
+    // Reset all to "waiting below" state
+    textBlocks.forEach((text) => {
+      if (!text) return;
+      text.style.opacity = '0';
+      text.style.transform = 'translateY(120px)';
+    });
 
     for (let i = 0; i < count; i++) {
       const img = images[i];
@@ -24,51 +65,63 @@ export default function ProjectShowcase({ project }) {
       if (!img || !text) continue;
 
       const rect = img.getBoundingClientRect();
-      const vh = window.innerHeight;
-      // Progress: 0 = image top at viewport bottom, 1 = image bottom at viewport top
       const raw = (vh - rect.top) / (vh + rect.height);
-      const progress = Math.max(0, Math.min(1, raw));
+      const p = Math.max(0, Math.min(1, raw));
 
-      // Active zone: image is centred roughly between 0.25–0.75
-      const enterStart = 0.2;
-      const enterEnd = 0.35;
-      const exitStart = 0.65;
-      const exitEnd = 0.8;
-
-      let opacity, translateY;
-
-      if (progress <= enterStart) {
-        // Below viewport — waiting, positioned below
-        opacity = 0;
-        translateY = 60;
-      } else if (progress <= enterEnd) {
-        // Entering — scrub from below to centre
-        const t = (progress - enterStart) / (enterEnd - enterStart);
-        const eased = easeOutCubic(t);
-        opacity = eased;
-        translateY = 60 * (1 - eased);
-      } else if (progress <= exitStart) {
-        // Fully visible
-        opacity = 1;
-        translateY = 0;
-      } else if (progress <= exitEnd) {
-        // Exiting — scrub from centre upward
-        const t = (progress - exitStart) / (exitEnd - exitStart);
-        const eased = easeInCubic(t);
-        opacity = 1 - eased;
-        translateY = -60 * eased;
-      } else {
-        // Above viewport — gone
-        opacity = 0;
-        translateY = -60;
+      // First image only: enter from below
+      if (i === 0) {
+        if (p <= ENTER_START) {
+          text.style.opacity = '0';
+          text.style.transform = 'translateY(120px)';
+        } else if (p <= ENTER_END) {
+          const t = (p - ENTER_START) / (ENTER_END - ENTER_START);
+          const eased = easeOutCubic(t);
+          text.style.opacity = String(eased);
+          text.style.transform = `translateY(${120 * (1 - eased)}px)`;
+        }
       }
 
-      text.style.opacity = opacity;
-      text.style.transform = `translateY(${translateY}px)`;
+      // Active zone: fully visible
+      if (p > ENTER_END && p <= EXIT_START) {
+        text.style.opacity = '1';
+        text.style.transform = 'translateY(0px)';
+      }
+
+      // Exit zone
+      if (p > EXIT_START) {
+        if (i < count - 1) {
+          // Transition to next: single transitionProgress drives both texts
+          const transitionProgress = Math.min(
+            1,
+            (p - EXIT_START) / (EXIT_END - EXIT_START)
+          );
+
+          // Outgoing (this text): complete in first half → full easeInCubic
+          const outT = Math.min(1, transitionProgress * 2);
+          const outEased = easeInCubic(outT);
+          text.style.opacity = String(1 - outEased);
+          text.style.transform = `translateY(${-120 * outEased}px)`;
+
+          // Incoming (next text): begin in second half → full easeOutCubic
+          const nextText = textBlocks[i + 1];
+          if (nextText) {
+            const inT = Math.max(0, transitionProgress * 2 - 1);
+            const inEased = easeOutCubic(inT);
+            nextText.style.opacity = String(inEased);
+            nextText.style.transform = `translateY(${120 * (1 - inEased)}px)`;
+          }
+        } else {
+          // Last image: exit upward
+          const t = Math.min(1, (p - EXIT_START) / (EXIT_END - EXIT_START));
+          const eased = easeInCubic(t);
+          text.style.opacity = String(1 - eased);
+          text.style.transform = `translateY(${-120 * eased}px)`;
+        }
+      }
     }
   }, []);
 
-  // ---- Mobile: parallax + cluster gap animation ----
+  // ---- Fix 3: Mobile parallax + cluster gap (images only, max 8px) ----
   const updateMobile = useCallback(() => {
     // Image parallax
     imageRefs.current.forEach((block) => {
@@ -83,19 +136,20 @@ export default function ProjectShowcase({ project }) {
       inner.style.transform = `scale(1.15) translateX(${tx}%)`;
     });
 
-    // Cluster horizontal gap animation
+    // Cluster gap — applied as width + translateX on cluster only.
+    // Text overlay slots live outside the cluster and are unaffected.
     const cluster = clusterRef.current;
     if (!cluster) return;
     const rect = cluster.getBoundingClientRect();
     const vh = window.innerHeight;
     const centreProgress = (vh - rect.top) / (vh + rect.height);
     const clamped = Math.max(0, Math.min(1, centreProgress));
-    // Gap is max at edges (0 and 1), zero when centred (0.5)
     const distFromCentre = Math.abs(clamped - 0.5) * 2;
-    const maxGap = 16;
+    const maxGap = 8;
     const gap = maxGap * easeInCubic(distFromCentre);
-    cluster.style.marginLeft = `${gap}px`;
-    cluster.style.marginRight = `${gap}px`;
+
+    cluster.style.transform = `translateX(${gap}px)`;
+    cluster.style.width = `calc(100% - ${gap * 2}px)`;
   }, []);
 
   // ---- Chips fade (desktop, scroll-linked) ----
@@ -150,7 +204,6 @@ export default function ProjectShowcase({ project }) {
 
     window.addEventListener('scroll', onScroll, { passive: true });
 
-    // Run once on mount so initial state is correct
     requestAnimationFrame(() => {
       if (isDesktop) {
         updateDesktop();
@@ -163,6 +216,28 @@ export default function ProjectShowcase({ project }) {
     return () => window.removeEventListener('scroll', onScroll);
   }, [updateDesktop, updateMobile, updateChips]);
 
+  // ---- Fix 2: Squircle clip-path via ResizeObserver ----
+  useEffect(() => {
+    const cluster = clusterRef.current;
+    if (!cluster) return;
+
+    const updateClipPath = () => {
+      const w = cluster.offsetWidth;
+      const h = cluster.offsetHeight;
+      if (w === 0 || h === 0) return;
+      const path = squirclePath(w, h, SQUIRCLE_C);
+      cluster.style.clipPath = `path("${path}")`;
+    };
+
+    updateClipPath();
+    const observer = new ResizeObserver(updateClipPath);
+    observer.observe(cluster);
+    return () => observer.disconnect();
+  }, []);
+
+  const tagsA = project.tagsA || [];
+  const tagsB = project.tagsB || [];
+
   return (
     <div className={styles.showcase} ref={showcaseRef}>
       {/* Desktop: sticky text column */}
@@ -172,16 +247,22 @@ export default function ProjectShowcase({ project }) {
           <h2 className={styles.projectName}>{project.name}</h2>
           <p className={styles.projectHeadline}>{project.headline}</p>
 
-          {/* Inline chips — desktop */}
-          {project.tags && (
-            <div className={styles.chips} ref={chipsRef}>
-              {project.tags.map((tag) => (
-                <span key={tag} className={styles.chip}>
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
+          {/* Year + chips row — desktop, scroll-linked fade */}
+          <div className={styles.chips} ref={chipsRef}>
+            {project.year && (
+              <span className={styles.chipYear}>{project.year}</span>
+            )}
+            {tagsA.map((tag) => (
+              <span key={tag} className={styles.chipA}>
+                {tag}
+              </span>
+            ))}
+            {tagsB.map((tag) => (
+              <span key={tag} className={styles.chipB}>
+                {tag}
+              </span>
+            ))}
+          </div>
 
           <div className={styles.descriptions}>
             {project.images.map((img, i) => (
@@ -202,51 +283,78 @@ export default function ProjectShowcase({ project }) {
         </div>
       </div>
 
-      {/* Images */}
+      {/* Images column */}
       <div className={styles.imageColumn} ref={imageColumnRef}>
-        {/* Seamless cluster wrapper */}
-        <div className={styles.cluster} ref={clusterRef}>
-          {project.images.map((img, i) => (
-            <div
-              key={i}
-              ref={(el) => {
-                imageRefs.current[i] = el;
-              }}
-              data-index={i}
-              className={`${styles.imageBlock} ${
-                i === 0
-                  ? styles.imageBlockFirst
-                  : i === project.images.length - 1
-                  ? styles.imageBlockLast
-                  : styles.imageBlockMiddle
-              }`}
-            >
-              <div className={styles.imageFrame}>
-                <div className={styles.imageInner} data-parallax>
-                  {img.src ? (
-                    <img
-                      src={img.src}
-                      alt={img.alt}
-                      className={styles.img}
-                    />
-                  ) : (
-                    <div className={styles.placeholder}>
-                      <span className={styles.placeholderText}>{img.alt}</span>
-                    </div>
-                  )}
+        {/* imageWrapper: positions cluster + mobile overlay slots together.
+            Cluster shifts for the gap effect; overlay slots stay full-width. */}
+        <div className={styles.imageWrapper}>
+          {/* Cluster: images only — squircle clip-path applied via JS */}
+          <div className={styles.cluster} ref={clusterRef}>
+            {project.images.map((img, i) => (
+              <div
+                key={i}
+                ref={(el) => {
+                  imageRefs.current[i] = el;
+                }}
+                data-index={i}
+                className={`${styles.imageBlock} ${
+                  i === 0
+                    ? styles.imageBlockFirst
+                    : i === project.images.length - 1
+                    ? styles.imageBlockLast
+                    : styles.imageBlockMiddle
+                }`}
+              >
+                <div className={styles.imageFrame}>
+                  <div className={styles.imageInner} data-parallax>
+                    {img.src ? (
+                      <img
+                        src={img.src}
+                        alt={img.alt}
+                        className={styles.img}
+                      />
+                    ) : (
+                      <div className={styles.placeholder}>
+                        <span className={styles.placeholderText}>
+                          {img.alt}
+                        </span>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
+            ))}
+          </div>
 
-              {/* Mobile: project info on first image */}
+          {/* Mobile overlay slots: sit outside the cluster so they don't
+              shift with the gap animation. Each slot covers the same
+              vertical area as its corresponding imageBlock. */}
+          {project.images.map((img, i) => (
+            <div
+              key={`overlay-${i}`}
+              className={styles.overlaySlot}
+              style={{ top: `calc(${i} * max(75vh, 400px))` }}
+            >
+              {/* Project info on first image only */}
               {i === 0 && (
                 <div className={styles.mobileHeader}>
                   <p className={styles.mobileLabel}>Project</p>
                   <h2 className={styles.mobileName}>{project.name}</h2>
                   <p className={styles.mobileHeadline}>{project.headline}</p>
-                  {project.tags && (
+                  {(tagsA.length > 0 || tagsB.length > 0 || project.year) && (
                     <div className={styles.mobileChips}>
-                      {project.tags.map((tag) => (
-                        <span key={tag} className={styles.mobileChip}>
+                      {project.year && (
+                        <span className={styles.mobileChipYear}>
+                          {project.year}
+                        </span>
+                      )}
+                      {tagsA.map((tag) => (
+                        <span key={tag} className={styles.mobileChipA}>
+                          {tag}
+                        </span>
+                      ))}
+                      {tagsB.map((tag) => (
+                        <span key={tag} className={styles.mobileChipB}>
                           {tag}
                         </span>
                       ))}
@@ -255,7 +363,7 @@ export default function ProjectShowcase({ project }) {
                 </div>
               )}
 
-              {/* Mobile: description overlay */}
+              {/* Description overlay */}
               <div className={styles.mobileOverlay}>
                 <p className={styles.mobileDesc}>{img.description}</p>
               </div>

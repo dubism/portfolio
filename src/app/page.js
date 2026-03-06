@@ -14,6 +14,8 @@ export default function Home() {
       <FloatingCTA />
       <Hero />
       <SectionDivider />
+      <About />
+      <SectionDivider />
       <section className={styles.projects} id="work">
         <ScrollReveal>
           <div className={styles.projectsLabel}>Selected Work</div>
@@ -24,8 +26,6 @@ export default function Home() {
           ))}
         </div>
       </section>
-      <SectionDivider />
-      <About />
       <SectionDivider />
       <Contact />
     </>

@@ -10,13 +10,6 @@ export default function About() {
         <p className={styles.bio}>{about.bio}</p>
       </ScrollReveal>
       <ScrollReveal delay={100}>
-        <div className={styles.keywords}>
-          {about.keywords.map((kw) => (
-            <span key={kw} className={styles.keyword}>{kw}</span>
-          ))}
-        </div>
-      </ScrollReveal>
-      <ScrollReveal delay={200}>
         <p className={styles.education}>{about.education}</p>
       </ScrollReveal>
     </section>

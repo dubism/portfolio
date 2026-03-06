@@ -19,15 +19,20 @@
   flex-direction: column;
 }
 
+/* ===== IMAGE WRAPPER — positions cluster + overlay slots ===== */
+
+.imageWrapper {
+  position: relative;
+}
+
 /* ===== CLUSTER — seamless image group ===== */
+/* border-radius removed; squircle clip-path applied via JS */
 
 .cluster {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border-radius: var(--radius-lg);
-  /* JS animates margin on mobile for the edge-gap effect */
-  transition: margin 0.05s linear;
+  /* No CSS transition — width/transform are scroll-scrubbed by JS */
 }
 
 /* ===== IMAGE BLOCK ===== */
@@ -39,8 +44,6 @@
   min-height: 400px;
 }
 
-/* Border-radius on individual blocks is only needed on mobile
-   where images aren't wrapped in the clipping cluster on desktop. */
 .imageBlockFirst,
 .imageBlockLast,
 .imageBlockMiddle {
@@ -83,7 +86,20 @@
   max-width: 260px;
 }
 
-/* ===== MOBILE OVERLAYS ===== */
+/* ===== MOBILE OVERLAY SLOTS ===== */
+/* Each slot sits over its corresponding imageBlock.
+   Lives outside the cluster so it is unaffected by the gap animation. */
+
+.overlaySlot {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: max(75vh, 400px);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* ===== MOBILE OVERLAYS (inside overlay slots) ===== */
 
 .mobileHeader {
   position: absolute;
@@ -93,6 +109,7 @@
   z-index: 2;
   padding: var(--space-6) var(--space-5) var(--space-8);
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), transparent);
+  pointer-events: auto;
 }
 
 .mobileLabel {
@@ -120,24 +137,43 @@
   line-height: 1.5;
 }
 
-/* Mobile chips */
+/* Mobile chips row */
 
 .mobileChips {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
   margin-top: var(--space-3);
+  align-items: center;
 }
 
-.mobileChip {
+/* Year — monospace, muted white on dark overlay */
+.mobileChipYear {
+  font-size: var(--text-small);
+  font-family: 'Courier New', 'Courier', monospace;
+  color: rgba(255, 255, 255, 0.65);
+  user-select: none;
+}
+
+/* Type A mobile chip: filled, legible on dark overlay */
+.mobileChipA {
   font-size: var(--text-small);
   font-weight: 500;
   padding: 2px var(--space-2);
   border-radius: 99px;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(242, 242, 242, 0.92);
+  color: #000;
+}
+
+/* Type B mobile chip: outlined, white text for dark overlay */
+.mobileChipB {
+  font-size: var(--text-small);
+  font-weight: 500;
+  padding: 2px var(--space-2);
+  border-radius: 99px;
+  background: transparent;
   color: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.55);
 }
 
 .mobileOverlay {
@@ -148,6 +184,7 @@
   z-index: 2;
   padding: var(--space-8) var(--space-5) var(--space-5);
   background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+  pointer-events: auto;
 }
 
 .mobileDesc {
@@ -207,23 +244,46 @@
     margin-bottom: var(--space-4);
   }
 
-  /* --- Desktop chips --- */
+  /* --- Desktop chips row (year + Type A + Type B) --- */
 
   .chips {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-2);
+    align-items: center;
     margin-bottom: var(--space-7);
     will-change: opacity;
   }
 
-  .chip {
+  /* Year — monospace, #888, non-interactive */
+  .chipYear {
+    font-size: var(--text-small);
+    font-family: 'Courier New', 'Courier', monospace;
+    color: #888;
+    user-select: none;
+    margin-right: var(--space-1);
+  }
+
+  /* Type A: filled #F2F2F2, black text, black border */
+  .chipA {
     font-size: var(--text-small);
     font-weight: 500;
     padding: var(--space-1) var(--space-3);
     border-radius: 99px;
-    background: var(--color-tag-bg);
-    color: var(--color-accent);
+    background: #f2f2f2;
+    color: #000;
+    border: 1px solid #000;
+  }
+
+  /* Type B: transparent, black text, black border (outlined only) */
+  .chipB {
+    font-size: var(--text-small);
+    font-weight: 500;
+    padding: var(--space-1) var(--space-3);
+    border-radius: 99px;
+    background: transparent;
+    color: #000;
+    border: 1px solid #000;
   }
 
   /* --- Description blocks: JS drives opacity + translateY directly --- */
@@ -258,19 +318,17 @@
     letter-spacing: 1px;
   }
 
-  /* --- Image column: seamless cluster --- */
+  /* --- Image column --- */
 
   .imageColumn {
     flex: 1;
     min-width: 0;
   }
 
+  /* Reset mobile JS-applied gap values on desktop */
   .cluster {
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    /* Desktop: no JS-driven margin */
-    margin-left: 0 !important;
-    margin-right: 0 !important;
+    transform: none !important;
+    width: 100% !important;
   }
 
   .imageBlock {
@@ -281,7 +339,6 @@
     align-items: center;
     justify-content: center;
     scroll-snap-align: center;
-    /* Inside the cluster all inner edges are square */
     border-radius: 0 !important;
   }
 
@@ -299,10 +356,8 @@
     border-radius: 0;
   }
 
-  /* Hide mobile-only overlays */
-
-  .mobileHeader,
-  .mobileOverlay {
+  /* Hide mobile-only overlay slots on desktop */
+  .overlaySlot {
     display: none;
   }
 }
