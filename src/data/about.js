@@ -8,7 +8,6 @@ const about = {
     'UX Strategy',
     'Project Leadership',
   ],
-  education: 'Doctoral research, FA STU BA / VW FCE',
 };
 
 export default about;
