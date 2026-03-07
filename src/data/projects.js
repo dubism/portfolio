@@ -50,6 +50,7 @@ const projects = [
     year: '2023\u2013ongoing',
     headline:
       'Conceptualizing and shaping UX strategy for the entire future portfolio',
+    tags: ['UX Strategy', 'Automotive', 'Research Synthesis'],
     tagsA: ['Strategy', 'Research'],
     tagsB: ['User Research', 'Prototyping'],
     images: [
@@ -78,6 +79,7 @@ const projects = [
     name: '\u0160koda Vision O',
     year: '2025',
     headline: 'Near-future focused conceptual UX design',
+    tags: ['Concept Design', 'Interaction Design', 'Automotive', 'AI Integration'],
     tagsA: ['Concept Design', 'Interaction Design'],
     tagsB: ['Figma', 'Prototyping'],
     images: [
@@ -101,6 +103,7 @@ const projects = [
     year: '2021\u20132023',
     headline:
       'Cockpit design in a cross-functional team from the earliest stage of HMI design',
+    tags: ['HMI Design', 'Cross-functional', 'Automotive', 'Brand Strategy'],
     tagsA: ['UX Design', 'Interaction Design', 'Systems Design'],
     tagsB: ['Figma', 'Design System'],
     images: [
@@ -123,6 +126,7 @@ const projects = [
     name: '\u0160koda Smart Dials',
     year: '2019\u20132021',
     headline: 'Interaction design for a new set of physical controls',
+    tags: ['Interaction Design', 'HMI Design', 'User Testing', 'Production Ship'],
     tagsA: ['Interaction Design', 'UX Design'],
     tagsB: ['Prototyping', 'User Research'],
     images: [
@@ -151,6 +155,7 @@ const projects = [
     name: 'Generative Methods in Automotive Design',
     year: '2014\u20132018',
     headline: 'Doctoral research at FA STU BA, in collaboration with VW FCE',
+    tags: ['Research', 'Generative Design', 'Academia'],
     tagsA: ['Research', 'Generative Design'],
     tagsB: ['Parametric Modeling'],
     images: [
