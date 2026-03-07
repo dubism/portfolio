@@ -40,6 +40,14 @@
   color: #fff;
   font-size: var(--text-small);
   font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.heroDomain:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
 }
 
 .scrollHint {

@@ -6,6 +6,18 @@
   margin-bottom: var(--space-5);
 }
 
+/* Highlight animation triggered by Hero tag chip click */
+:global(.projectHighlight) {
+  animation: projectGlow 1200ms ease-out;
+}
+
+@keyframes projectGlow {
+  0%   { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+  20%  { box-shadow: 0 0 20px 4px rgba(255, 255, 255, 0.12); }
+  50%  { box-shadow: 0 0 20px 4px rgba(255, 255, 255, 0.12); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+}
+
 /* ===== DESKTOP TEXT COLUMN (hidden on mobile) ===== */
 
 .textColumn {
