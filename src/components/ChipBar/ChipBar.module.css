@@ -1,0 +1,43 @@
+/* ===== CHIP BAR — global filterable tag bar ===== */
+
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-bottom: var(--space-7);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  border: none;
+  border-radius: 99px;
+  padding: 6px 16px;
+  color: #fff;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--text-small);
+  cursor: pointer;
+  line-height: 1;
+  white-space: nowrap;
+  /* Tactile press: fast scale-down, slightly slower spring back */
+  transition: transform 100ms ease, filter 100ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.chip:hover {
+  filter: brightness(1.15);
+}
+
+.chip:active {
+  transform: scale(0.95);
+  filter: brightness(0.85);
+  transition-duration: 60ms;
+}
+
+@media (max-width: 767px) {
+  .bar {
+    padding-left: var(--space-5);
+    padding-right: var(--space-5);
+  }
+}

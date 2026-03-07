@@ -34,12 +34,12 @@ export default function ProjectShowcase({ project }) {
   const imageColumnRef = useRef(null);
   const imageRefs = useRef([]);
   const textBlocksRef = useRef([]);
-  const chipsRef = useRef(null);
   const clusterRef = useRef(null);
 
-  // ---- Fix 1: Desktop scroll-scrubbed text animation ----
-  // Single transitionProgress (0→1) drives both outgoing and incoming text.
-  // At transitionProgress === 0.5, both texts are opacity 0.
+  // ---- Task 1: Desktop scroll-scrubbed text animation ----
+  // Single transitionProgress (0→1) derived from the scroll gap between two
+  // adjacent image centres. Hard midpoint: outgoing completes in first half
+  // (0→0.5), incoming starts in second half (0.5→1) — zero simultaneous visibility.
   const updateDesktop = useCallback(() => {
     const images = imageRefs.current.filter(Boolean);
     const textBlocks = textBlocksRef.current.filter(Boolean);
@@ -47,77 +47,79 @@ export default function ProjectShowcase({ project }) {
     if (count === 0) return;
 
     const vh = window.innerHeight;
-    const ENTER_START = 0.2;
-    const ENTER_END = 0.35;
-    const EXIT_START = 0.65;
-    const EXIT_END = 0.8;
+    const viewCenter = vh / 2;
+    const TRAVEL = 110;
+    // The transition band occupies the middle 50% of the gap between two image
+    // centres. This gives a stable fully-visible zone on either side.
+    const BAND_START = 0.25;
+    const BAND_END = 0.75;
 
-    // Reset all to "waiting below" state
+    // Centre Y (from top of viewport) for each image block
+    const midY = images.map((img) => {
+      const rect = img.getBoundingClientRect();
+      return rect.top + rect.height / 2;
+    });
+
+    // Reset all text blocks to hidden-below state
     textBlocks.forEach((text) => {
       if (!text) return;
       text.style.opacity = '0';
-      text.style.transform = 'translateY(120px)';
+      text.style.transform = `translateY(${TRAVEL}px)`;
     });
 
-    for (let i = 0; i < count; i++) {
-      const img = images[i];
-      const text = textBlocks[i];
-      if (!img || !text) continue;
+    if (count === 1) {
+      if (textBlocks[0]) {
+        textBlocks[0].style.opacity = '1';
+        textBlocks[0].style.transform = 'translateY(0px)';
+      }
+      return;
+    }
 
-      const rect = img.getBoundingClientRect();
-      const raw = (vh - rect.top) / (vh + rect.height);
-      const p = Math.max(0, Math.min(1, raw));
+    // Scan consecutive pairs for an active transition band
+    for (let i = 0; i < count - 1; i++) {
+      const gap = midY[i + 1] - midY[i]; // positive: next image is below
+      if (gap <= 0) continue;
 
-      // First image only: enter from below
-      if (i === 0) {
-        if (p <= ENTER_START) {
-          text.style.opacity = '0';
-          text.style.transform = 'translateY(120px)';
-        } else if (p <= ENTER_END) {
-          const t = (p - ENTER_START) / (ENTER_END - ENTER_START);
-          const eased = easeOutCubic(t);
-          text.style.opacity = String(eased);
-          text.style.transform = `translateY(${120 * (1 - eased)}px)`;
+      // raw = 0 when image i is centred, raw = 1 when image i+1 is centred
+      const raw = (viewCenter - midY[i]) / gap;
+
+      if (raw >= BAND_START && raw <= BAND_END) {
+        // Normalise to [0, 1] within the transition band
+        const tp = (raw - BAND_START) / (BAND_END - BAND_START);
+
+        // Outgoing (text[i]): full fade-out in first half
+        const outT = Math.min(1, tp * 2);
+        const outE = easeInCubic(outT);
+        if (textBlocks[i]) {
+          textBlocks[i].style.opacity = String(1 - outE);
+          textBlocks[i].style.transform = `translateY(${-TRAVEL * outE}px)`;
         }
-      }
 
-      // Active zone: fully visible
-      if (p > ENTER_END && p <= EXIT_START) {
-        text.style.opacity = '1';
-        text.style.transform = 'translateY(0px)';
-      }
-
-      // Exit zone
-      if (p > EXIT_START) {
-        if (i < count - 1) {
-          // Transition to next: single transitionProgress drives both texts
-          const transitionProgress = Math.min(
-            1,
-            (p - EXIT_START) / (EXIT_END - EXIT_START)
-          );
-
-          // Outgoing (this text): complete in first half → full easeInCubic
-          const outT = Math.min(1, transitionProgress * 2);
-          const outEased = easeInCubic(outT);
-          text.style.opacity = String(1 - outEased);
-          text.style.transform = `translateY(${-120 * outEased}px)`;
-
-          // Incoming (next text): begin in second half → full easeOutCubic
-          const nextText = textBlocks[i + 1];
-          if (nextText) {
-            const inT = Math.max(0, transitionProgress * 2 - 1);
-            const inEased = easeOutCubic(inT);
-            nextText.style.opacity = String(inEased);
-            nextText.style.transform = `translateY(${120 * (1 - inEased)}px)`;
-          }
-        } else {
-          // Last image: exit upward
-          const t = Math.min(1, (p - EXIT_START) / (EXIT_END - EXIT_START));
-          const eased = easeInCubic(t);
-          text.style.opacity = String(1 - eased);
-          text.style.transform = `translateY(${-120 * eased}px)`;
+        // Incoming (text[i+1]): full fade-in in second half
+        const inT = Math.max(0, tp * 2 - 1);
+        const inE = easeOutCubic(inT);
+        if (textBlocks[i + 1]) {
+          textBlocks[i + 1].style.opacity = String(inE);
+          textBlocks[i + 1].style.transform = `translateY(${TRAVEL * (1 - inE)}px)`;
         }
+
+        return; // only one pair can be active at a time
       }
+    }
+
+    // No pair is actively transitioning — find which text block to show fully.
+    // For every completed transition (raw > BAND_END), advance activeIdx.
+    let activeIdx = 0;
+    for (let i = 0; i < count - 1; i++) {
+      const gap = midY[i + 1] - midY[i];
+      if (gap <= 0) continue;
+      const raw = (viewCenter - midY[i]) / gap;
+      if (raw > BAND_END) activeIdx = i + 1;
+    }
+
+    if (textBlocks[activeIdx]) {
+      textBlocks[activeIdx].style.opacity = '1';
+      textBlocks[activeIdx].style.transform = 'translateY(0px)';
     }
   }, []);
 
@@ -152,37 +154,6 @@ export default function ProjectShowcase({ project }) {
     cluster.style.width = `calc(100% - ${gap * 2}px)`;
   }, []);
 
-  // ---- Chips fade (desktop, scroll-linked) ----
-  const updateChips = useCallback(() => {
-    const chips = chipsRef.current;
-    const showcase = showcaseRef.current;
-    if (!chips || !showcase) return;
-
-    const rect = showcase.getBoundingClientRect();
-    const vh = window.innerHeight;
-    const progress = (vh - rect.top) / (vh + rect.height);
-    const clamped = Math.max(0, Math.min(1, progress));
-
-    const fadeIn = 0.08;
-    const fadeInEnd = 0.18;
-    const fadeOut = 0.82;
-    const fadeOutEnd = 0.92;
-
-    let opacity;
-    if (clamped <= fadeIn) {
-      opacity = 0;
-    } else if (clamped <= fadeInEnd) {
-      opacity = easeOutCubic((clamped - fadeIn) / (fadeInEnd - fadeIn));
-    } else if (clamped <= fadeOut) {
-      opacity = 1;
-    } else if (clamped <= fadeOutEnd) {
-      opacity = 1 - easeInCubic((clamped - fadeOut) / (fadeOutEnd - fadeOut));
-    } else {
-      opacity = 0;
-    }
-    chips.style.opacity = opacity;
-  }, []);
-
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 767px)');
     const isDesktop = !mq.matches;
@@ -194,7 +165,6 @@ export default function ProjectShowcase({ project }) {
       requestAnimationFrame(() => {
         if (isDesktop) {
           updateDesktop();
-          updateChips();
         } else {
           updateMobile();
         }
@@ -207,14 +177,13 @@ export default function ProjectShowcase({ project }) {
     requestAnimationFrame(() => {
       if (isDesktop) {
         updateDesktop();
-        updateChips();
       } else {
         updateMobile();
       }
     });
 
     return () => window.removeEventListener('scroll', onScroll);
-  }, [updateDesktop, updateMobile, updateChips]);
+  }, [updateDesktop, updateMobile]);
 
   // ---- Fix 2: Squircle clip-path via ResizeObserver ----
   useEffect(() => {
@@ -235,34 +204,14 @@ export default function ProjectShowcase({ project }) {
     return () => observer.disconnect();
   }, []);
 
-  const tagsA = project.tagsA || [];
-  const tagsB = project.tagsB || [];
-
   return (
-    <div className={styles.showcase} ref={showcaseRef}>
+    <div className={styles.showcase} ref={showcaseRef} id={project.id}>
       {/* Desktop: sticky text column */}
       <div className={styles.textColumn}>
         <div className={styles.textSticky}>
           <p className={styles.projectLabel}>Project</p>
           <h2 className={styles.projectName}>{project.name}</h2>
           <p className={styles.projectHeadline}>{project.headline}</p>
-
-          {/* Year + chips row — desktop, scroll-linked fade */}
-          <div className={styles.chips} ref={chipsRef}>
-            {project.year && (
-              <span className={styles.chipYear}>{project.year}</span>
-            )}
-            {tagsA.map((tag) => (
-              <span key={tag} className={styles.chipA}>
-                {tag}
-              </span>
-            ))}
-            {tagsB.map((tag) => (
-              <span key={tag} className={styles.chipB}>
-                {tag}
-              </span>
-            ))}
-          </div>
 
           <div className={styles.descriptions}>
             {project.images.map((img, i) => (
@@ -341,25 +290,6 @@ export default function ProjectShowcase({ project }) {
                   <p className={styles.mobileLabel}>Project</p>
                   <h2 className={styles.mobileName}>{project.name}</h2>
                   <p className={styles.mobileHeadline}>{project.headline}</p>
-                  {(tagsA.length > 0 || tagsB.length > 0 || project.year) && (
-                    <div className={styles.mobileChips}>
-                      {project.year && (
-                        <span className={styles.mobileChipYear}>
-                          {project.year}
-                        </span>
-                      )}
-                      {tagsA.map((tag) => (
-                        <span key={tag} className={styles.mobileChipA}>
-                          {tag}
-                        </span>
-                      ))}
-                      {tagsB.map((tag) => (
-                        <span key={tag} className={styles.mobileChipB}>
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
                 </div>
               )}
 
