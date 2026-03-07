@@ -108,7 +108,6 @@
   right: 0;
   z-index: 2;
   padding: var(--space-6) var(--space-5) var(--space-8);
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), transparent);
   pointer-events: auto;
 }
 
@@ -128,6 +127,7 @@
   line-height: 1.15;
   letter-spacing: -0.5px;
   margin-bottom: var(--space-2);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
 }
 
 .mobileHeadline {
@@ -135,6 +135,25 @@
   font-size: var(--text-body);
   color: rgba(255, 255, 255, 0.85);
   line-height: 1.5;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+}
+
+/* Mobile tag chips (per-project, display-only) */
+
+.mobileTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: var(--space-2);
+}
+
+.mobileTag {
+  border-radius: 99px;
+  padding: 4px 12px;
+  color: #fff;
+  font-size: var(--text-small);
+  font-weight: 600;
+  pointer-events: none;
 }
 
 /* Mobile chips row */
@@ -183,7 +202,6 @@
   right: 0;
   z-index: 2;
   padding: var(--space-8) var(--space-5) var(--space-5);
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
   pointer-events: auto;
 }
 
@@ -192,6 +210,7 @@
   font-size: var(--text-caption);
   color: rgba(255, 255, 255, 0.92);
   line-height: 1.6;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
 }
 
 /* ===== DESKTOP LAYOUT ===== */
@@ -242,6 +261,24 @@
     color: var(--color-text-secondary);
     line-height: 1.65;
     margin-bottom: var(--space-4);
+  }
+
+  /* --- Desktop tag chips (per-project, display-only) --- */
+
+  .desktopTags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: var(--space-4);
+  }
+
+  .desktopTag {
+    border-radius: 99px;
+    padding: 4px 12px;
+    color: #fff;
+    font-size: var(--text-small);
+    font-weight: 600;
+    pointer-events: none;
   }
 
   /* --- Desktop chips row (year + Type A + Type B) --- */

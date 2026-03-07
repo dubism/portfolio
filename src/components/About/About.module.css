@@ -37,11 +37,3 @@
   color: var(--color-text-inverse);
   letter-spacing: 0.2px;
 }
-
-.education {
-  margin-top: var(--space-7);
-  font-size: var(--text-caption);
-  color: var(--color-text-secondary);
-  font-family: var(--font-serif);
-  font-style: italic;
-}

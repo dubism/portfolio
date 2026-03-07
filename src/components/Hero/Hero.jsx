@@ -1,6 +1,7 @@
 import hero from '@/data/hero';
 import ScrollReveal from '@/components/ScrollReveal/ScrollReveal';
 import styles from './Hero.module.css';
+import { TAG_COLORS, FEATURED_TAGS } from '@/data/tagColors';
 
 export default function Hero() {
   return (
@@ -8,15 +9,21 @@ export default function Hero() {
       <ScrollReveal>
         <h1 className={styles.name}>{hero.name}</h1>
       </ScrollReveal>
-      <ScrollReveal delay={100}>
-        <div className={styles.domains}>
-          {hero.domains.map((d) => (
-            <span key={d} className={styles.domain}>{d}</span>
-          ))}
-        </div>
-      </ScrollReveal>
       <ScrollReveal delay={200}>
         <p className={styles.tagline}>{hero.tagline}</p>
+      </ScrollReveal>
+      <ScrollReveal delay={300}>
+        <div className={styles.heroDomains}>
+          {FEATURED_TAGS.map((tag) => (
+            <span
+              key={tag}
+              className={styles.heroDomain}
+              style={{ backgroundColor: TAG_COLORS[tag] || '#888' }}
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
       </ScrollReveal>
       <div className={styles.scrollHint} aria-hidden="true">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useCallback } from 'react';
 import styles from './ProjectShowcase.module.css';
+import { TAG_COLORS } from '@/data/tagColors';
 
 // ---- Fix 2: Squircle path computation ----
 // c = visual corner radius; curve starts at c*1.6 from corner (iOS-style smooth start)
@@ -213,6 +214,20 @@ export default function ProjectShowcase({ project }) {
           <h2 className={styles.projectName}>{project.name}</h2>
           <p className={styles.projectHeadline}>{project.headline}</p>
 
+          {project.tags && project.tags.length > 0 && (
+            <div className={styles.desktopTags}>
+              {project.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className={styles.desktopTag}
+                  style={{ backgroundColor: TAG_COLORS[tag] || '#888' }}
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+
           <div className={styles.descriptions}>
             {project.images.map((img, i) => (
               <div
@@ -290,6 +305,19 @@ export default function ProjectShowcase({ project }) {
                   <p className={styles.mobileLabel}>Project</p>
                   <h2 className={styles.mobileName}>{project.name}</h2>
                   <p className={styles.mobileHeadline}>{project.headline}</p>
+                  {project.tags && project.tags.length > 0 && (
+                    <div className={styles.mobileTags}>
+                      {project.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className={styles.mobileTag}
+                          style={{ backgroundColor: TAG_COLORS[tag] || '#888' }}
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
 
