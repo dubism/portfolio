@@ -36,6 +36,7 @@ export default function ProjectShowcase({ project }) {
   const imageRefs = useRef([]);
   const textBlocksRef = useRef([]);
   const clusterRef = useRef(null);
+  const snapRef = useRef(null); // 'padded' | 'edge' | null
 
   // ---- Task 1: Desktop scroll-scrubbed text animation ----
   // Single transitionProgress (0→1) derived from the scroll gap between two
@@ -139,7 +140,7 @@ export default function ProjectShowcase({ project }) {
       inner.style.transform = `scale(1.15) translateX(${tx}%)`;
     });
 
-    // Cluster gap — applied as width + translateX on cluster only.
+    // Cluster gap — binary snap applied as width + translateX on cluster only.
     // Text overlay slots live outside the cluster and are unaffected.
     const cluster = clusterRef.current;
     if (!cluster) return;
@@ -149,10 +150,25 @@ export default function ProjectShowcase({ project }) {
     const clamped = Math.max(0, Math.min(1, centreProgress));
     const distFromCentre = Math.abs(clamped - 0.5) * 2;
     const maxGap = 8;
-    const gap = maxGap * easeInCubic(distFromCentre);
+
+    // Binary snap: below threshold → edge-to-edge (no gap), above → padded
+    const isEdge = distFromCentre < 0.35;
+    const gap = isEdge ? 0 : maxGap;
+    const newSnap = isEdge ? 'edge' : 'padded';
 
     cluster.style.transform = `translateX(${gap}px)`;
     cluster.style.width = `calc(100% - ${gap * 2}px)`;
+
+    // Recalculate clip-path only when snap state changes (corner radius differs)
+    if (snapRef.current !== newSnap) {
+      snapRef.current = newSnap;
+      const w = cluster.offsetWidth;
+      const h = cluster.offsetHeight;
+      if (w > 0 && h > 0) {
+        const c = isEdge ? 0 : SQUIRCLE_C;
+        cluster.style.clipPath = `path("${squirclePath(w, h, c)}")`;
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -195,7 +211,8 @@ export default function ProjectShowcase({ project }) {
       const w = cluster.offsetWidth;
       const h = cluster.offsetHeight;
       if (w === 0 || h === 0) return;
-      const path = squirclePath(w, h, SQUIRCLE_C);
+      const c = snapRef.current === 'edge' ? 0 : SQUIRCLE_C;
+      const path = squirclePath(w, h, c);
       cluster.style.clipPath = `path("${path}")`;
     };
 
