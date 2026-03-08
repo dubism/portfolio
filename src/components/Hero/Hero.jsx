@@ -6,8 +6,8 @@ import projects from '@/data/projects';
 import ScrollReveal from '@/components/ScrollReveal/ScrollReveal';
 import styles from './Hero.module.css';
 import { TAG_COLORS, FEATURED_TAGS } from '@/data/tagColors';
+import { teleportToProject } from '@/lib/teleportToProject';
 
-const SCROLL_OFFSET = 80;
 const HIGHLIGHT_CLASS = 'projectHighlight';
 
 export default function Hero() {
@@ -17,15 +17,12 @@ export default function Hero() {
     const el = document.getElementById(project.id);
     if (!el) return;
 
-    const top = el.getBoundingClientRect().top + window.scrollY - SCROLL_OFFSET;
-    window.scrollTo({ top, behavior: 'smooth' });
-
-    setTimeout(() => {
+    teleportToProject(el).then(() => {
       el.classList.add(HIGHLIGHT_CLASS);
       setTimeout(() => {
         el.classList.remove(HIGHLIGHT_CLASS);
       }, 1200);
-    }, 500);
+    });
   }, []);
 
   return (
