@@ -1,5 +1,10 @@
 import './globals.css';
 
+export const viewport = {
+  themeColor: '#F5F0EA',
+  viewportFit: 'cover',
+};
+
 export const metadata = {
   title: 'Matej Dubiš — Behavioral & Decision Science, UX Research, Service Design',
   description:

@@ -36,7 +36,7 @@ export default function ProjectShowcase({ project }) {
   const imageRefs = useRef([]);
   const textBlocksRef = useRef([]);
   const clusterRef = useRef(null);
-  const snapRef = useRef(null); // 'padded' | 'edge' | null
+  const coverageRef = useRef(0); // smooth 0→1 (0=padded, 1=edge-to-edge)
 
   // ---- Task 1: Desktop scroll-scrubbed text animation ----
   // Single transitionProgress (0→1) derived from the scroll gap between two
@@ -125,7 +125,7 @@ export default function ProjectShowcase({ project }) {
     }
   }, []);
 
-  // ---- Fix 3: Mobile parallax + cluster gap (images only, max 8px) ----
+  // ---- Mobile parallax + smooth edge-to-edge transition ----
   const updateMobile = useCallback(() => {
     // Image parallax
     imageRefs.current.forEach((block) => {
@@ -140,34 +140,37 @@ export default function ProjectShowcase({ project }) {
       inner.style.transform = `scale(1.15) translateX(${tx}%)`;
     });
 
-    // Cluster gap — binary snap applied as width + translateX on cluster only.
-    // Text overlay slots live outside the cluster and are unaffected.
+    // Smooth gap transition: edge-to-edge when photos cover viewport top-to-bottom.
+    // Animate smoothly as photos approach full coverage.
     const cluster = clusterRef.current;
     if (!cluster) return;
     const rect = cluster.getBoundingClientRect();
     const vh = window.innerHeight;
-    const centreProgress = (vh - rect.top) / (vh + rect.height);
-    const clamped = Math.max(0, Math.min(1, centreProgress));
-    const distFromCentre = Math.abs(clamped - 0.5) * 2;
     const maxGap = 8;
 
-    // Binary snap: below threshold → edge-to-edge (no gap), above → padded
-    const isEdge = distFromCentre < 0.35;
-    const gap = isEdge ? 0 : maxGap;
-    const newSnap = isEdge ? 'edge' : 'padded';
+    // How far past each viewport edge the cluster extends (positive = covered)
+    const topOverflow = -rect.top;
+    const bottomOverflow = rect.bottom - vh;
+
+    // Transition zone: smooth animation over 100px as edges approach coverage
+    const zone = 100;
+    const topCoverage = Math.max(0, Math.min(1, topOverflow / zone));
+    const bottomCoverage = Math.max(0, Math.min(1, bottomOverflow / zone));
+
+    // Both edges must be covered for full edge-to-edge
+    const coverage = Math.min(topCoverage, bottomCoverage);
+    coverageRef.current = coverage;
+
+    const gap = maxGap * (1 - coverage);
+    const c = SQUIRCLE_C * (1 - coverage);
 
     cluster.style.transform = `translateX(${gap}px)`;
     cluster.style.width = `calc(100% - ${gap * 2}px)`;
 
-    // Recalculate clip-path only when snap state changes (corner radius differs)
-    if (snapRef.current !== newSnap) {
-      snapRef.current = newSnap;
-      const w = cluster.offsetWidth;
-      const h = cluster.offsetHeight;
-      if (w > 0 && h > 0) {
-        const c = isEdge ? 0 : SQUIRCLE_C;
-        cluster.style.clipPath = `path("${squirclePath(w, h, c)}")`;
-      }
+    const w = cluster.offsetWidth;
+    const h = cluster.offsetHeight;
+    if (w > 0 && h > 0) {
+      cluster.style.clipPath = `path("${squirclePath(w, h, c)}")`;
     }
   }, []);
 
@@ -202,7 +205,7 @@ export default function ProjectShowcase({ project }) {
     return () => window.removeEventListener('scroll', onScroll);
   }, [updateDesktop, updateMobile]);
 
-  // ---- Fix 2: Squircle clip-path via ResizeObserver ----
+  // ---- Squircle clip-path via ResizeObserver ----
   useEffect(() => {
     const cluster = clusterRef.current;
     if (!cluster) return;
@@ -211,7 +214,7 @@ export default function ProjectShowcase({ project }) {
       const w = cluster.offsetWidth;
       const h = cluster.offsetHeight;
       if (w === 0 || h === 0) return;
-      const c = snapRef.current === 'edge' ? 0 : SQUIRCLE_C;
+      const c = SQUIRCLE_C * (1 - coverageRef.current);
       const path = squirclePath(w, h, c);
       cluster.style.clipPath = `path("${path}")`;
     };
