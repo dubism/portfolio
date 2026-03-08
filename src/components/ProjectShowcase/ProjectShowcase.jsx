@@ -318,8 +318,10 @@ export default function ProjectShowcase({ project }) {
         {/* imageWrapper: positions cluster + mobile overlay slots together.
             Cluster shifts for the gap effect; overlay slots stay full-width. */}
         <div className={styles.imageWrapper}>
-          {/* Mobile sticky project name — inside imageWrapper for proper sticky + overlay behavior */}
-          <h2 className={styles.stickyName} ref={stickyNameRef}>{project.name}</h2>
+          {/* Mobile sticky project name — zero-height wrapper so it doesn't shift cluster/overlays */}
+          <div className={styles.stickyNameWrapper}>
+            <h2 className={styles.stickyName} ref={stickyNameRef}>{project.name}</h2>
+          </div>
 
           {/* Cluster: images only — squircle clip-path applied via JS */}
           <div className={styles.cluster} ref={clusterRef}>

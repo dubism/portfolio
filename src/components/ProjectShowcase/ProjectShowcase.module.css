@@ -123,14 +123,23 @@
   pointer-events: auto;
 }
 
+/* Zero-height wrapper keeps stickyName out of normal flow so it doesn't push cluster down */
+.stickyNameWrapper {
+  height: 0;
+  overflow: visible;
+  position: relative;
+  z-index: 10;
+}
+
 /* Sticky mobile project name — sticks to top while cluster is in view */
 .stickyName {
   position: sticky;
-  top: env(safe-area-inset-top, 0px);
+  top: calc(env(safe-area-inset-top, 0px) + 72px);
+  /* 72px = 16px (--space-4, CTA top) + 40px (CTA pill height) + 16px gap below CTA */
   z-index: 10;
   opacity: 0;
   transition: opacity 0.15s ease;
-  padding: var(--space-5) var(--space-5) var(--space-3);
+  padding: var(--space-3) var(--space-5);
   font-size: var(--text-h2);
   font-weight: 700;
   color: #fff;
@@ -254,6 +263,10 @@
   .textSticky {
     position: sticky;
     top: 25vh;
+  }
+
+  .stickyNameWrapper {
+    display: none;
   }
 
   .stickyName {
