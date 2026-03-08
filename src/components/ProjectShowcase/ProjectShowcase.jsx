@@ -37,6 +37,8 @@ export default function ProjectShowcase({ project }) {
   const textBlocksRef = useRef([]);
   const clusterRef = useRef(null);
   const coverageRef = useRef(0); // smooth 0→1 (0=padded, 1=edge-to-edge)
+  const stickyNameRef = useRef(null);
+  const overlaySlotRefs = useRef([]);
 
   // ---- Task 1: Desktop scroll-scrubbed text animation ----
   // Single transitionProgress (0→1) derived from the scroll gap between two
@@ -172,6 +174,24 @@ export default function ProjectShowcase({ project }) {
     if (w > 0 && h > 0) {
       cluster.style.clipPath = `path("${squirclePath(w, h, c)}")`;
     }
+
+    // Fade overlays as they approach the sticky headline
+    const stickyEl = stickyNameRef.current;
+    if (!stickyEl) return;
+    const stickyBottom = stickyEl.getBoundingClientRect().bottom;
+    const FADE_ZONE = 120;
+
+    overlaySlotRefs.current.forEach((slot) => {
+      if (!slot) return;
+      const slotRect = slot.getBoundingClientRect();
+      const dist = slotRect.top - stickyBottom;
+      if (dist < FADE_ZONE) {
+        const opacity = Math.max(0, dist / FADE_ZONE);
+        slot.style.opacity = String(opacity);
+      } else {
+        slot.style.opacity = '1';
+      }
+    });
   }, []);
 
   useEffect(() => {
@@ -230,7 +250,6 @@ export default function ProjectShowcase({ project }) {
       {/* Desktop: sticky text column */}
       <div className={styles.textColumn}>
         <div className={styles.textSticky}>
-          <p className={styles.projectLabel}>Project</p>
           <h2 className={styles.projectName}>{project.name}</h2>
           <p className={styles.projectHeadline}>{project.headline}</p>
 
@@ -269,6 +288,9 @@ export default function ProjectShowcase({ project }) {
 
       {/* Images column */}
       <div className={styles.imageColumn} ref={imageColumnRef}>
+        {/* Mobile sticky project name — outside overlay system for proper sticky behavior */}
+        <h2 className={styles.stickyName} ref={stickyNameRef}>{project.name}</h2>
+
         {/* imageWrapper: positions cluster + mobile overlay slots together.
             Cluster shifts for the gap effect; overlay slots stay full-width. */}
         <div className={styles.imageWrapper}>
@@ -318,12 +340,13 @@ export default function ProjectShowcase({ project }) {
               key={`overlay-${i}`}
               className={styles.overlaySlot}
               style={{ top: `calc(${i} * max(75vh, 400px))` }}
+              ref={(el) => {
+                overlaySlotRefs.current[i] = el;
+              }}
             >
               {/* Project info on first image only */}
               {i === 0 && (
                 <div className={styles.mobileHeader}>
-                  <p className={styles.mobileLabel}>Project</p>
-                  <h2 className={styles.mobileName}>{project.name}</h2>
                   <p className={styles.mobileHeadline}>{project.headline}</p>
                   {project.tags && project.tags.length > 0 && (
                     <div className={styles.mobileTags}>

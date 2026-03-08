@@ -123,23 +123,19 @@
   pointer-events: auto;
 }
 
-.mobileLabel {
-  font-size: var(--text-small);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: var(--color-accent-light);
-  margin-bottom: var(--space-2);
-}
-
-.mobileName {
+/* Sticky mobile project name — sticks to top while cluster is in view */
+.stickyName {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: var(--space-4) var(--space-5);
   font-size: var(--text-h2);
   font-weight: 700;
   color: #fff;
   line-height: 1.15;
   letter-spacing: -0.5px;
-  margin-bottom: var(--space-2);
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  margin: 0;
 }
 
 .mobileHeadline {
@@ -249,13 +245,8 @@
     top: 25vh;
   }
 
-  .projectLabel {
-    font-size: var(--text-small);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--color-accent);
-    margin-bottom: var(--space-3);
+  .stickyName {
+    display: none;
   }
 
   .projectName {
