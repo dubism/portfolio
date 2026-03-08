@@ -38,7 +38,8 @@ export default function ProjectShowcase({ project }) {
   const clusterRef = useRef(null);
   const coverageRef = useRef(0); // smooth 0→1 (0=padded, 1=edge-to-edge)
   const stickyNameRef = useRef(null);
-  const overlaySlotRefs = useRef([]);
+  const mobileHeaderRefs = useRef([]);
+  const mobileOverlayRefs = useRef([]);
 
   // ---- Task 1: Desktop scroll-scrubbed text animation ----
   // Single transitionProgress (0→1) derived from the scroll gap between two
@@ -175,23 +176,38 @@ export default function ProjectShowcase({ project }) {
       cluster.style.clipPath = `path("${squirclePath(w, h, c)}")`;
     }
 
-    // Fade overlays as they approach the sticky headline
+    // Fade overlay content as it approaches the sticky headline
     const stickyEl = stickyNameRef.current;
-    if (!stickyEl) return;
-    const stickyBottom = stickyEl.getBoundingClientRect().bottom;
-    const FADE_ZONE = 120;
+    if (stickyEl) {
+      const stickyBottom = stickyEl.getBoundingClientRect().bottom;
+      const fadeStart = vh / 3; // begin fading in top third of screen
 
-    overlaySlotRefs.current.forEach((slot) => {
-      if (!slot) return;
-      const slotRect = slot.getBoundingClientRect();
-      const dist = slotRect.top - stickyBottom;
-      if (dist < FADE_ZONE) {
-        const opacity = Math.max(0, dist / FADE_ZONE);
-        slot.style.opacity = String(opacity);
-      } else {
-        slot.style.opacity = '1';
-      }
-    });
+      // Fade mobileHeader elements (headline, tags on first image)
+      mobileHeaderRefs.current.forEach((el) => {
+        if (!el) return;
+        const elTop = el.getBoundingClientRect().top;
+        if (elTop < fadeStart) {
+          const range = fadeStart - stickyBottom;
+          const opacity = range > 0 ? Math.max(0, (elTop - stickyBottom) / range) : 0;
+          el.style.opacity = String(opacity);
+        } else {
+          el.style.opacity = '1';
+        }
+      });
+
+      // Fade mobileOverlay elements (descriptions)
+      mobileOverlayRefs.current.forEach((el) => {
+        if (!el) return;
+        const elTop = el.getBoundingClientRect().top;
+        if (elTop < fadeStart) {
+          const range = fadeStart - stickyBottom;
+          const opacity = range > 0 ? Math.max(0, (elTop - stickyBottom) / range) : 0;
+          el.style.opacity = String(opacity);
+        } else {
+          el.style.opacity = '1';
+        }
+      });
+    }
   }, []);
 
   useEffect(() => {
@@ -288,12 +304,12 @@ export default function ProjectShowcase({ project }) {
 
       {/* Images column */}
       <div className={styles.imageColumn} ref={imageColumnRef}>
-        {/* Mobile sticky project name — outside overlay system for proper sticky behavior */}
-        <h2 className={styles.stickyName} ref={stickyNameRef}>{project.name}</h2>
-
         {/* imageWrapper: positions cluster + mobile overlay slots together.
             Cluster shifts for the gap effect; overlay slots stay full-width. */}
         <div className={styles.imageWrapper}>
+          {/* Mobile sticky project name — inside imageWrapper for proper sticky + overlay behavior */}
+          <h2 className={styles.stickyName} ref={stickyNameRef}>{project.name}</h2>
+
           {/* Cluster: images only — squircle clip-path applied via JS */}
           <div className={styles.cluster} ref={clusterRef}>
             {project.images.map((img, i) => (
@@ -340,13 +356,13 @@ export default function ProjectShowcase({ project }) {
               key={`overlay-${i}`}
               className={styles.overlaySlot}
               style={{ top: `calc(${i} * max(75vh, 400px))` }}
-              ref={(el) => {
-                overlaySlotRefs.current[i] = el;
-              }}
             >
               {/* Project info on first image only */}
               {i === 0 && (
-                <div className={styles.mobileHeader}>
+                <div
+                  className={styles.mobileHeader}
+                  ref={(el) => { mobileHeaderRefs.current[i] = el; }}
+                >
                   <p className={styles.mobileHeadline}>{project.headline}</p>
                   {project.tags && project.tags.length > 0 && (
                     <div className={styles.mobileTags}>
@@ -365,7 +381,10 @@ export default function ProjectShowcase({ project }) {
               )}
 
               {/* Description overlay */}
-              <div className={styles.mobileOverlay}>
+              <div
+                className={styles.mobileOverlay}
+                ref={(el) => { mobileOverlayRefs.current[i] = el; }}
+              >
                 <p className={styles.mobileDesc}>{img.description}</p>
               </div>
             </div>
