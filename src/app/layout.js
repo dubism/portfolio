@@ -1,7 +1,7 @@
 import './globals.css';
 
 export const viewport = {
-  themeColor: '#F5F0EA',
+  themeColor: '#000000',
   viewportFit: 'cover',
 };
 
