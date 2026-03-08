@@ -185,10 +185,10 @@ export default function ProjectShowcase({ project }) {
       // Fade mobileHeader elements (headline, tags on first image)
       mobileHeaderRefs.current.forEach((el) => {
         if (!el) return;
-        const elTop = el.getBoundingClientRect().top;
-        if (elTop < fadeStart) {
+        const elBottom = el.getBoundingClientRect().bottom;
+        if (elBottom < fadeStart) {
           const range = fadeStart - stickyBottom;
-          const opacity = range > 0 ? Math.max(0, (elTop - stickyBottom) / range) : 0;
+          const opacity = range > 0 ? Math.max(0, (elBottom - stickyBottom) / range) : 0;
           el.style.opacity = String(opacity);
         } else {
           el.style.opacity = '1';
@@ -207,6 +207,17 @@ export default function ProjectShowcase({ project }) {
           el.style.opacity = '1';
         }
       });
+
+      // Show sticky name only after mobileHeader has scrolled past
+      const header = mobileHeaderRefs.current[0];
+      if (header && stickyEl) {
+        const headerBottom = header.getBoundingClientRect().bottom;
+        if (headerBottom < stickyEl.getBoundingClientRect().bottom) {
+          stickyEl.style.opacity = '1';
+        } else {
+          stickyEl.style.opacity = '0';
+        }
+      }
     }
   }, []);
 
@@ -363,6 +374,7 @@ export default function ProjectShowcase({ project }) {
                   className={styles.mobileHeader}
                   ref={(el) => { mobileHeaderRefs.current[i] = el; }}
                 >
+                  <h2 className={styles.mobileName}>{project.name}</h2>
                   <p className={styles.mobileHeadline}>{project.headline}</p>
                   {project.tags && project.tags.length > 0 && (
                     <div className={styles.mobileTags}>
