@@ -55,19 +55,19 @@ const projects = [
     tagsB: ['User Research', 'Prototyping'],
     images: [
       {
-        src: null,
+        src: '/images/skoda-experience-strategy/01.jpg',
         alt: 'Strategic framework overview',
         description:
           'Strategic framework mapping user journeys across the full \u0160koda vehicle portfolio, grounded in trend and research synthesis.',
       },
       {
-        src: null,
+        src: '/images/skoda-experience-strategy/02.jpg',
         alt: 'High-fidelity prototype for management review',
         description:
           'High-fidelity prototypes developed for executive presentations \u2014 communicating strategic UX direction across design, engineering, and leadership stakeholders.',
       },
       {
-        src: null,
+        src: '/images/skoda-experience-strategy/03.jpg',
         alt: 'Future portfolio UX direction',
         description:
           'Outcome: a cohesive strategic direction for the next generation of \u0160koda experiences, ready for hand-off to product teams.',
@@ -84,13 +84,13 @@ const projects = [
     tagsB: ['Figma', 'Prototyping'],
     images: [
       {
-        src: null,
+        src: '/images/skoda-vision-o/01.jpg',
         alt: 'Physical-digital interaction concept',
         description:
           'Holistic interaction design for a concept vehicle \u2014 covering physical controls, digital surfaces, and AI assistant integration.',
       },
       {
-        src: null,
+        src: '/images/skoda-vision-o/02.jpg',
         alt: 'Vision O concept showcase',
         description:
           'Concept showcased as \u0160koda Vision O, exploring near-future human-car relationships through seamless physical and digital touchpoints.',
@@ -108,13 +108,13 @@ const projects = [
     tagsB: ['Figma', 'Design System'],
     images: [
       {
-        src: null,
+        src: '/images/skoda-peaq-cockpit/01.jpg',
         alt: 'Early-stage cockpit concept',
         description:
           'Early-stage HMI concept tying user needs, design vision, and brand strategy \u2014 developed collaboratively across UX, engineering, and brand teams.',
       },
       {
-        src: null,
+        src: '/images/skoda-peaq-cockpit/02.jpg',
         alt: 'Stakeholder presentation materials',
         description:
           'Design presentation crafted for successful buy-in at all company and Group levels, aligning cross-functional stakeholders on a unified cockpit direction.',
@@ -131,19 +131,19 @@ const projects = [
     tagsB: ['Prototyping', 'User Research'],
     images: [
       {
-        src: null,
+        src: '/images/skoda-smart-dials/01.jpg',
         alt: 'Smart Dials interaction design',
         description:
           'Interaction design for a given set of physical controls \u2014 coordinating UX, UI, and motion design across two modules through multiple user testing iterations.',
       },
       {
-        src: null,
+        src: '/images/skoda-smart-dials/02.jpg',
         alt: 'User testing and iteration',
         description:
           'Iterative design process responding to user feedback and feasibility constraints, leading to a refined and validated control experience.',
       },
       {
-        src: null,
+        src: '/images/skoda-smart-dials/03.jpg',
         alt: 'Production-ready outcome',
         description:
           'Successful product shipped to production \u2014 delivered as project leader and UX designer, from concept through implementation.',
@@ -160,13 +160,13 @@ const projects = [
     tagsB: ['Parametric Modeling'],
     images: [
       {
-        src: null,
+        src: '/images/generative-methods/01.jpg',
         alt: 'Generative design methods research',
         description:
           'Exploration of new generative design methods and their application to real problems in the automotive industry \u2014 research conducted at FA STU BA in collaboration with VW FCE.',
       },
       {
-        src: null,
+        src: '/images/generative-methods/02.jpg',
         alt: 'Industry application and validation',
         description:
           'New generative design methods validated and applied in industry contexts, bridging academic research and automotive product development.',
