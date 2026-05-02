@@ -18,7 +18,7 @@ export default function Home() {
       <SectionDivider />
       <section className={styles.projects} id="work">
         <ScrollReveal>
-          <div className={styles.projectsLabel}>Selected Work</div>
+          <div className={styles.projectsLabel}>Four Evidence Chapters</div>
         </ScrollReveal>
         <div className={styles.showcaseList}>
           {projects.map((project) => (
