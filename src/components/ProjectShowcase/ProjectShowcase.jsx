@@ -294,6 +294,33 @@ export default function ProjectShowcase({ project }) {
             </div>
           )}
 
+          {project.evidence && project.evidence.length > 0 && (
+            <dl className={styles.evidenceGrid}>
+              {project.evidence.map((item) => (
+                <div key={item.label} className={styles.evidenceItem}>
+                  <dt className={styles.evidenceLabel}>{item.label}</dt>
+                  <dd className={styles.evidenceText}>{item.value}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
+
+          {project.sources && project.sources.length > 0 && (
+            <div className={styles.sourceLinks} aria-label="Public context links">
+              {project.sources.map((source) => (
+                <a
+                  key={source.href}
+                  href={source.href}
+                  className={styles.sourceLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {source.label}
+                </a>
+              ))}
+            </div>
+          )}
+
           <div className={styles.descriptions}>
             {project.images.map((img, i) => (
               <div
@@ -388,6 +415,16 @@ export default function ProjectShowcase({ project }) {
                         >
                           {tag}
                         </span>
+                      ))}
+                    </div>
+                  )}
+                  {project.evidence && project.evidence.length > 0 && (
+                    <div className={styles.mobileEvidence}>
+                      {project.evidence.slice(0, 1).map((item) => (
+                        <p key={item.label} className={styles.mobileEvidenceItem}>
+                          <span>{item.label}</span>
+                          {item.value}
+                        </p>
                       ))}
                     </div>
                   )}

@@ -1,7 +1,7 @@
 const hero = {
   name: 'Matej Dubiš',
   tagline:
-    'Collaborative designer delivering convincing solutions in complex contexts.',
+    'Senior UX/HMI designer shaping complex human-machine systems across research, concept, production, and AI.',
 };
 
 export default hero;

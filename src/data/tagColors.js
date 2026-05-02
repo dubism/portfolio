@@ -13,13 +13,14 @@ export const TAG_COLORS = {
   'Research':           '#5A8A5A',
   'Generative Design':  '#9A5A8A',
   'Academia':           '#6A7A8A',
+  'Systems Design':     '#546B75',
 };
 
 export const FEATURED_TAGS = [
-  'UX Strategy',
-  'Automotive',
-  'Interaction Design',
   'HMI Design',
+  'AI Integration',
+  'Interaction Design',
+  'UX Strategy',
   'Concept Design',
   'Research',
 ];
