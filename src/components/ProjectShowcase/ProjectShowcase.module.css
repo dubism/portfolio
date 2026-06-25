@@ -44,7 +44,8 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  will-change: transform, clip-path;
+  box-shadow: 0 34px 84px rgba(37, 31, 25, 0.13);
+  will-change: width, margin, clip-path;
 }
 
 /* ===== IMAGE BLOCK ===== */
@@ -52,8 +53,8 @@
 .imageBlock {
   position: relative;
   overflow: hidden;
-  height: 75vh;
-  min-height: 400px;
+  height: 74vh;
+  min-height: 430px;
 }
 
 .imageBlockFirst,
@@ -70,7 +71,7 @@
 
 .imageInner {
   width: 100%;
-  height: 100%;
+  height: 124%;
   will-change: transform;
 }
 
@@ -461,16 +462,16 @@
     min-width: 0;
   }
 
-  /* Reset mobile JS-applied gap values on desktop */
+  /* Round 5 JS owns desktop width/margin so the stack can breathe to the viewport edge. */
   .cluster {
     transform: none !important;
-    width: 100% !important;
   }
 
   .imageBlock {
     height: auto;
-    min-height: 80vh;
-    overflow: visible;
+    min-height: 640px;
+    height: 86vh;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -480,12 +481,12 @@
 
   .imageFrame {
     width: 100%;
-    height: auto;
-    aspect-ratio: 1 / 1;
+    height: 100%;
+    aspect-ratio: auto;
   }
 
   .imageInner {
-    transform: none !important;
+    height: 130%;
   }
 
   .placeholder {
