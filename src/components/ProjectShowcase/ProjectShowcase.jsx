@@ -28,7 +28,7 @@ function squirclePath(w, h, c) {
   ].join(' ');
 }
 
-const SQUIRCLE_C = 16;
+const SQUIRCLE_C = 188;
 
 export default function ProjectShowcase({ project }) {
   const showcaseRef = useRef(null);
@@ -53,11 +53,11 @@ export default function ProjectShowcase({ project }) {
 
     const vh = window.innerHeight;
     const viewCenter = vh / 2;
-    const TRAVEL = 110;
-    // The transition band occupies the middle 50% of the gap between two image
-    // centres. This gives a stable fully-visible zone on either side.
-    const BAND_START = 0.25;
-    const BAND_END = 0.75;
+    const TRAVEL = 112;
+    // Round 5 keeps captions smaller and allows a slight low-opacity overlap
+    // while adjacent panels hand off around the viewport centre.
+    const BAND_START = 0.03;
+    const BAND_END = 0.97;
 
     // Centre Y (from top of viewport) for each image block
     const midY = images.map((img) => {
@@ -92,17 +92,15 @@ export default function ProjectShowcase({ project }) {
         // Normalise to [0, 1] within the transition band
         const tp = (raw - BAND_START) / (BAND_END - BAND_START);
 
-        // Outgoing (text[i]): full fade-out in first half
-        const outT = Math.min(1, tp * 2);
-        const outE = easeInCubic(outT);
+        // Outgoing (text[i]): soft overlap through the first half of the handoff
+        const outE = smooth(Math.max(0, Math.min(1, tp / 0.56)));
         if (textBlocks[i]) {
           textBlocks[i].style.opacity = String(1 - outE);
           textBlocks[i].style.transform = `translateY(${-TRAVEL * outE}px)`;
         }
 
-        // Incoming (text[i+1]): full fade-in in second half
-        const inT = Math.max(0, tp * 2 - 1);
-        const inE = easeOutCubic(inT);
+        // Incoming (text[i+1]): starts before the outgoing caption fully leaves
+        const inE = smooth(Math.max(0, Math.min(1, (tp - 0.44) / 0.56)));
         if (textBlocks[i + 1]) {
           textBlocks[i + 1].style.opacity = String(inE);
           textBlocks[i + 1].style.transform = `translateY(${TRAVEL * (1 - inE)}px)`;
@@ -128,53 +126,51 @@ export default function ProjectShowcase({ project }) {
     }
   }, []);
 
-  // ---- Mobile parallax + smooth edge-to-edge transition ----
-  const updateMobile = useCallback(() => {
-    // Image parallax
-    imageRefs.current.forEach((block) => {
-      if (!block) return;
-      const inner = block.querySelector('[data-parallax]');
-      if (!inner) return;
-      const rect = block.getBoundingClientRect();
-      const vh = window.innerHeight;
-      const progress = 1 - (rect.top + rect.height) / (vh + rect.height);
-      const t = Math.max(0, Math.min(1, progress));
-      const tx = (t - 0.5) * 14;
-      inner.style.transform = `scale(1.15) translateX(${tx}%)`;
-    });
-
-    // Smooth gap transition: edge-to-edge when photos cover viewport top-to-bottom.
-    // Animate smoothly as photos approach full coverage.
+  // ---- Round 5 image stack framing, parallax, and smooth edge-to-edge transition ----
+  const updateStack = useCallback(() => {
     const cluster = clusterRef.current;
-    if (!cluster) return;
-    const rect = cluster.getBoundingClientRect();
+    const imageColumn = imageColumnRef.current;
+    if (!cluster || !imageColumn) return;
+
     const vh = window.innerHeight;
-    const maxGap = 8;
-
-    // How far past each viewport edge the cluster extends (positive = covered)
-    const topOverflow = -rect.top;
-    const bottomOverflow = rect.bottom - vh;
-
-    // Transition zone: smooth animation over 100px as edges approach coverage
-    const zone = 100;
-    const topCoverage = Math.max(0, Math.min(1, topOverflow / zone));
-    const bottomCoverage = Math.max(0, Math.min(1, bottomOverflow / zone));
-
-    // Both edges must be covered for full edge-to-edge
-    const coverage = Math.min(topCoverage, bottomCoverage);
+    const mobile = window.matchMedia('(max-width: 767px)').matches;
+    const rect = cluster.getBoundingClientRect();
+    const zone = mobile ? 130 : 220;
+    const topCoverage = Math.max(0, Math.min(1, -rect.top / zone));
+    const bottomCoverage = Math.max(0, Math.min(1, (rect.bottom - vh) / zone));
+    const coverage = smooth(Math.min(topCoverage, bottomCoverage));
     coverageRef.current = coverage;
 
-    const gap = maxGap * (1 - coverage);
-    const c = SQUIRCLE_C * (1 - coverage);
+    const baseGap = mobile ? 14 : 26;
+    const baseRadius = mobile ? (window.innerWidth < 520 ? 82 : 96) : SQUIRCLE_C;
+    const gap = baseGap * (1 - coverage);
+    const c = baseRadius * (1 - coverage);
 
-    cluster.style.transform = `translateX(${gap}px)`;
-    cluster.style.width = `calc(100% - ${gap * 2}px)`;
+    if (mobile) {
+      cluster.style.width = `calc(100% - ${(gap * 2).toFixed(1)}px)`;
+      cluster.style.margin = `0 ${gap.toFixed(1)}px`;
+    } else {
+      const trackLeft = imageColumn.getBoundingClientRect().left;
+      const width = Math.max(360, window.innerWidth - trackLeft - gap);
+      cluster.style.width = `${width.toFixed(1)}px`;
+      cluster.style.margin = `0 ${gap.toFixed(1)}px 0 0`;
+    }
 
     const w = cluster.offsetWidth;
     const h = cluster.offsetHeight;
     if (w > 0 && h > 0) {
       cluster.style.clipPath = `path("${squirclePath(w, h, c)}")`;
     }
+
+    imageRefs.current.forEach((block) => {
+      if (!block) return;
+      const inner = block.querySelector('[data-parallax]');
+      if (!inner) return;
+      const blockRect = block.getBoundingClientRect();
+      const focus = Math.max(0, Math.min(1, 1 - Math.abs(blockRect.top + blockRect.height / 2 - vh / 2) / (vh * 0.74)));
+      const parallax = (blockRect.top - vh / 2) * (mobile ? -0.19 : -0.235);
+      inner.style.transform = `translate3d(0, ${parallax.toFixed(1)}px, 0) scale(${(1.06 + focus * 0.035).toFixed(3)})`;
+    });
 
     // Fade overlay content as it approaches the sticky headline
     const stickyEl = stickyNameRef.current;
@@ -230,27 +226,29 @@ export default function ProjectShowcase({ project }) {
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(() => {
+        updateStack();
         if (isDesktop) {
           updateDesktop();
-        } else {
-          updateMobile();
         }
         ticking = false;
       });
     };
 
     window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
 
     requestAnimationFrame(() => {
+      updateStack();
       if (isDesktop) {
         updateDesktop();
-      } else {
-        updateMobile();
       }
     });
 
-    return () => window.removeEventListener('scroll', onScroll);
-  }, [updateDesktop, updateMobile]);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, [updateDesktop, updateStack]);
 
   // ---- Squircle clip-path via ResizeObserver ----
   useEffect(() => {
@@ -395,7 +393,7 @@ export default function ProjectShowcase({ project }) {
             <div
               key={`overlay-${i}`}
               className={styles.overlaySlot}
-              style={{ top: `calc(${i} * max(75vh, 400px))` }}
+              style={{ top: `calc(${i} * max(74vh, 430px))` }}
             >
               {/* Project info on first image only */}
               {i === 0 && (
@@ -446,10 +444,6 @@ export default function ProjectShowcase({ project }) {
   );
 }
 
-function easeOutCubic(t) {
-  return 1 - Math.pow(1 - t, 3);
-}
-
-function easeInCubic(t) {
-  return t * t * t;
+function smooth(t) {
+  return t * t * (3 - 2 * t);
 }
