@@ -1,33 +1,11 @@
-import Hero from '@/components/Hero/Hero';
-import ProjectShowcase from '@/components/ProjectShowcase/ProjectShowcase';
-import About from '@/components/About/About';
-import Contact from '@/components/Contact/Contact';
-import SectionDivider from '@/components/SectionDivider/SectionDivider';
-import ScrollReveal from '@/components/ScrollReveal/ScrollReveal';
-import FloatingCTA from '@/components/FloatingCTA/FloatingCTA';
-import projects from '@/data/projects';
-import styles from './page.module.css';
-
 export default function Home() {
   return (
-    <>
-      <FloatingCTA />
-      <Hero />
-      <SectionDivider />
-      <About />
-      <SectionDivider />
-      <section className={styles.projects} id="work">
-        <ScrollReveal>
-          <div className={styles.projectsLabel}>Four Evidence Chapters</div>
-        </ScrollReveal>
-        <div className={styles.showcaseList}>
-          {projects.map((project) => (
-            <ProjectShowcase key={project.id} project={project} />
-          ))}
-        </div>
-      </section>
-      <SectionDivider />
-      <Contact />
-    </>
+    <main style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', padding: '24px', fontFamily: 'system-ui, sans-serif' }}>
+      <meta httpEquiv="refresh" content="0; url=/portfolio/round-5/" />
+      <p>
+        Opening the live portfolio prototype.{' '}
+        <a href="/portfolio/round-5/">Continue to the portfolio</a>.
+      </p>
+    </main>
   );
 }

@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>R5-A Polished Continuous Stack</title>
+  <style>
+    :root{
+      --bg:#f5f0ea;--ink:#171411;--muted:#746d66;--line:#d4ccc2;
+      --blue:#4f82bd;--teal:#3d846f;--green:#5f8d61;--purple:#6d58b5;
+      --font-sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      --font-display:var(--font-sans);
+      --font-serif:Georgia,"Times New Roman",serif;
+      --lab-bg:rgba(248,245,240,.92);--lab-ink:#171411;--lab-line:#d4ccc2;
+      font-family:var(--font-sans);
+    }
+    body[data-theme="paper-moss"]{--bg:#f5f0ea;--ink:#171411;--muted:#746d66;--line:#d4ccc2;--blue:#4f82bd;--teal:#3d846f;--green:#5f8d61;--purple:#6d58b5;--font-sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--font-display:var(--font-sans);--font-serif:Georgia,"Times New Roman",serif;--lab-bg:rgba(248,245,240,.92);--lab-ink:#171411;--lab-line:#d4ccc2}
+    body[data-theme="graphite-signal"]{--bg:#f2f3f1;--ink:#101417;--muted:#586266;--line:#c8d0d0;--blue:#276fbf;--teal:#13847d;--green:#627b3c;--purple:#6a4faa;--font-sans:"Helvetica Neue",Arial,sans-serif;--font-display:"Arial Black","Helvetica Neue",Arial,sans-serif;--font-serif:"Iowan Old Style",Georgia,serif;--lab-bg:rgba(242,243,241,.92);--lab-ink:#101417;--lab-line:#c8d0d0}
+    body[data-theme="ceramic-lab"]{--bg:#f8f6f1;--ink:#20242a;--muted:#6b6d6d;--line:#d8d1c4;--blue:#3b74a2;--teal:#317d77;--green:#7f8a5a;--purple:#8a5e82;--font-sans:"Avenir Next",Avenir,Inter,sans-serif;--font-display:"Avenir Next Condensed","Avenir Next",Inter,sans-serif;--font-serif:Baskerville,"Libre Baskerville",Georgia,serif;--lab-bg:rgba(248,246,241,.92);--lab-ink:#20242a;--lab-line:#d8d1c4}
+    body[data-theme="nordic-console"]{--bg:#eef2f2;--ink:#0f1d25;--muted:#61707a;--line:#c5d1d5;--blue:#2f6ea3;--teal:#1c8a8f;--green:#5e8063;--purple:#5a65a8;--font-sans:"DIN Alternate","Avenir Next",Inter,sans-serif;--font-display:"DIN Condensed","DIN Alternate","Avenir Next Condensed",Inter,sans-serif;--font-serif:"Iowan Old Style",Georgia,serif;--lab-bg:rgba(238,242,242,.92);--lab-ink:#0f1d25;--lab-line:#c5d1d5}
+    body[data-theme="infrared-studio"]{--bg:#f6eee7;--ink:#18110e;--muted:#76675f;--line:#d9c9bd;--blue:#3f6f9f;--teal:#2b796f;--green:#6d8758;--purple:#b24f3f;--font-sans:"Arial Narrow","Helvetica Neue",Arial,sans-serif;--font-display:"Impact","Arial Black","Helvetica Neue",sans-serif;--font-serif:Georgia,"Times New Roman",serif;--lab-bg:rgba(246,238,231,.92);--lab-ink:#18110e;--lab-line:#d9c9bd}
+    body[data-theme="night-glass"]{--bg:#111315;--ink:#f1eee7;--muted:#b1ada4;--line:#34383b;--blue:#5b8fd6;--teal:#2fa897;--green:#819c65;--purple:#8a73d7;--font-sans:"SF Pro Display","Helvetica Neue",Inter,sans-serif;--font-display:"SF Pro Display","Helvetica Neue",Inter,sans-serif;--font-serif:"New York",Georgia,serif;--lab-bg:rgba(17,19,21,.9);--lab-ink:#f1eee7;--lab-line:#34383b}
+    body[data-theme="greenhouse-code"]{--bg:#f3f5e8;--ink:#132018;--muted:#667161;--line:#ccd4b8;--blue:#407db3;--teal:#16806c;--green:#4d8a43;--purple:#7862a8;--font-sans:"Gill Sans","Avenir Next",Inter,sans-serif;--font-display:"Gill Sans","Avenir Next",Inter,sans-serif;--font-serif:"Iowan Old Style",Georgia,serif;--lab-bg:rgba(243,245,232,.92);--lab-ink:#132018;--lab-line:#ccd4b8}
+    body[data-theme="blueprint-atelier"]{--bg:#edf3f6;--ink:#0d2134;--muted:#5d7280;--line:#bfd0dc;--blue:#1f64a5;--teal:#247e95;--green:#557f72;--purple:#4f5fa7;--font-sans:"DIN Alternate","Helvetica Neue",Arial,sans-serif;--font-display:"DIN Condensed","Arial Narrow","Helvetica Neue",sans-serif;--font-serif:Charter,Georgia,serif;--lab-bg:rgba(237,243,246,.92);--lab-ink:#0d2134;--lab-line:#bfd0dc}
+    body[data-theme="soft-brutalist"]{--bg:#efebe5;--ink:#161616;--muted:#69635e;--line:#c9c0b5;--blue:#496c91;--teal:#35766b;--green:#6c774c;--purple:#8c4f66;--font-sans:"Arial",Helvetica,sans-serif;--font-display:"Arial Black",Arial,sans-serif;--font-serif:"Times New Roman",Times,serif;--lab-bg:rgba(239,235,229,.92);--lab-ink:#161616;--lab-line:#c9c0b5}
+    body[data-theme="kyoto-graphite"]{--bg:#f4f0e8;--ink:#171513;--muted:#706a61;--line:#d8cfc0;--blue:#3d668f;--teal:#476e65;--green:#71784b;--purple:#9c4f3f;--font-sans:"Hiragino Sans","Avenir Next",Inter,sans-serif;--font-display:"Hiragino Sans","Avenir Next",Inter,sans-serif;--font-serif:"Hiragino Mincho ProN","Yu Mincho",Georgia,serif;--lab-bg:rgba(244,240,232,.92);--lab-ink:#171513;--lab-line:#d8cfc0}
+    body[data-theme="solar-prototype"]{--bg:#fbf4d8;--ink:#17160f;--muted:#756d52;--line:#ded2a7;--blue:#397ab4;--teal:#07817a;--green:#6d8b3e;--purple:#a14c78;--font-sans:"Avenir Next",Inter,sans-serif;--font-display:"Futura","Avenir Next",Inter,sans-serif;--font-serif:Georgia,"Times New Roman",serif;--lab-bg:rgba(251,244,216,.92);--lab-ink:#17160f;--lab-line:#ded2a7}
+    body[data-theme="museum-archive"]{--bg:#f1eadc;--ink:#201913;--muted:#72675b;--line:#d5c8b4;--blue:#315f82;--teal:#3b7168;--green:#76804b;--purple:#7b3f4d;--font-sans:"Optima","Avenir Next",Inter,sans-serif;--font-display:"Optima","Avenir Next",Inter,sans-serif;--font-serif:Baskerville,"Times New Roman",serif;--lab-bg:rgba(241,234,220,.92);--lab-ink:#201913;--lab-line:#d5c8b4}
+    body[data-theme="field-notes"]{--bg:#f7f1e5;--ink:#211d17;--muted:#716958;--line:#d8cbb4;--blue:#4d75a0;--teal:#3f7b6c;--green:#6f7d43;--purple:#8b5b45;--font-sans:"Courier New",Courier,monospace;--font-display:"Arial Black","Helvetica Neue",Arial,sans-serif;--font-serif:"Iowan Old Style",Georgia,serif;--lab-bg:rgba(247,241,229,.92);--lab-ink:#211d17;--lab-line:#d8cbb4}
+    body[data-theme="interface-mono"]{--bg:#f3f3ee;--ink:#101010;--muted:#5f625d;--line:#c8cbc2;--blue:#336fc2;--teal:#008575;--green:#658641;--purple:#6f54bc;--font-sans:"SF Mono",Menlo,Consolas,monospace;--font-display:"Helvetica Neue",Arial,sans-serif;--font-serif:"SF Mono",Menlo,Consolas,monospace;--lab-bg:rgba(243,243,238,.92);--lab-ink:#101010;--lab-line:#c8cbc2}
+    body[data-theme="bauhaus-fleet"]{--bg:#f4efe1;--ink:#15120d;--muted:#6b6458;--line:#d4c8af;--blue:#245da8;--teal:#087d78;--green:#708342;--purple:#c14d3c;--font-sans:"Futura","Avenir Next",Inter,sans-serif;--font-display:"Futura Condensed Extra Bold","Futura","Arial Black",sans-serif;--font-serif:Georgia,"Times New Roman",serif;--lab-bg:rgba(244,239,225,.92);--lab-ink:#15120d;--lab-line:#d4c8af}
+    body[data-theme="digital-clay"]{--bg:#f3e9df;--ink:#1d1512;--muted:#74645d;--line:#dac7ba;--blue:#3a6fa3;--teal:#2d8073;--green:#6e8556;--purple:#9b5b4d;--font-sans:"Avenir Next",Inter,sans-serif;--font-display:"Cooper Black","Arial Black","Avenir Next",sans-serif;--font-serif:"Iowan Old Style",Georgia,serif;--lab-bg:rgba(243,233,223,.92);--lab-ink:#1d1512;--lab-line:#dac7ba}
+    body[data-theme="clinical-lumen"]{--bg:#f7f9f7;--ink:#121a18;--muted:#5d6a66;--line:#d2dcd8;--blue:#3478b9;--teal:#178a79;--green:#5f8c66;--purple:#7560ae;--font-sans:"SF Pro Text","Helvetica Neue",Inter,sans-serif;--font-display:"SF Pro Display","Helvetica Neue",Inter,sans-serif;--font-serif:"New York",Georgia,serif;--lab-bg:rgba(247,249,247,.92);--lab-ink:#121a18;--lab-line:#d2dcd8}
+    body[data-theme="electric-editorial"]{--bg:#f7f2ff;--ink:#15111c;--muted:#675f73;--line:#d6cce2;--blue:#3e76d5;--teal:#16847c;--green:#6a8d4f;--purple:#7549d8;--font-sans:"Avenir Next",Inter,sans-serif;--font-display:"Helvetica Neue",Arial,sans-serif;--font-serif:"Didot",Bodoni,Georgia,serif;--lab-bg:rgba(247,242,255,.92);--lab-ink:#15111c;--lab-line:#d6cce2}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--ink);overflow-x:hidden}
+    a{color:inherit}
+    .themeBar{position:fixed;top:0;left:0;right:0;z-index:80;height:42px;display:grid;grid-template-columns:minmax(180px,300px) minmax(0,1fr);gap:10px;align-items:center;padding:5px 12px;border-bottom:1px solid var(--lab-line);background:var(--lab-bg);color:var(--lab-ink);backdrop-filter:blur(18px);font-family:var(--font-sans);font-size:12px}
+    .themeMeta{min-width:0;display:flex;gap:10px;align-items:center}
+    .themeMeta strong{font-size:11px;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
+    .themeIntent{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:color-mix(in srgb,var(--lab-ink),transparent 34%)}
+    .themeButtons{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none}
+    .themeButtons::-webkit-scrollbar{display:none}
+    .themeButton{flex:0 0 auto;border:1px solid color-mix(in srgb,var(--lab-line),var(--lab-ink) 10%);border-radius:999px;background:transparent;color:inherit;padding:5px 10px;font:700 11px/1 var(--font-sans);cursor:pointer;white-space:nowrap}
+    .themeButton.isActive{background:var(--lab-ink);border-color:var(--lab-ink);color:var(--lab-bg)}
+    .top{position:fixed;right:22px;top:58px;z-index:40;color:var(--muted);font-size:13px;text-decoration:none;border-bottom:1px solid var(--line)}
+    .intro{max-width:1180px;margin:0 auto;padding:84px 28px 54px;min-height:58vh;display:flex;flex-direction:column;justify-content:end}
+    .eyebrow{color:#39796b;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:18px}
+    h1{max-width:990px;margin:0;font-family:var(--font-display);font-size:clamp(48px,8.8vw,116px);line-height:.95;letter-spacing:-.045em}
+    .intro p{max-width:760px;margin:26px 0 0;color:var(--muted);font:28px/1.45 var(--font-serif)}
+    .chapter{
+      --edgeGap:18px;
+      --clusterRadius:132px;
+      --coverage:0;
+      display:grid;
+      grid-template-columns:minmax(330px,32vw) minmax(0,1fr);
+      gap:34px;
+      padding-bottom:112px;
+    }
+    .side{position:sticky;top:17vh;align-self:start;z-index:8;padding-left:max(28px,calc((100vw - 1320px)/2 + 28px));padding-right:8px}
+    h2{margin:0 0 14px;font-family:var(--font-display);font-size:clamp(34px,4vw,62px);line-height:1;letter-spacing:-.04em}
+    .thesis{margin:0 0 18px;color:var(--muted);font:20px/1.55 var(--font-serif)}
+    .tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:30px}
+    .tag{padding:6px 13px;border-radius:99px;color:#fff;font-size:13px;font-weight:700}
+    .captionBox{min-height:330px;border-top:1px solid var(--line);padding-top:22px;overflow:hidden}
+    .label{display:block;margin-bottom:16px;color:var(--muted);font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+    .captionViewport{position:relative;min-height:292px;overflow:hidden}
+    .captionItem{position:absolute;inset:0 0 auto;opacity:0;transform:translate3d(0,82px,0);will-change:opacity,transform;pointer-events:none}
+    .captionText{margin:0;color:var(--muted);font:clamp(22px,1.55vw,26px)/1.4 var(--font-serif)}
+    .counter{display:block;margin-top:18px;color:color-mix(in srgb,var(--muted),transparent 46%);font-size:13px;letter-spacing:.12em}
+    .track{grid-column:2;min-width:0}
+    .cluster{
+      overflow:hidden;
+      background:#111;
+      clip-path:none;
+      will-change:clip-path,width,margin;
+      box-shadow:0 34px 84px rgba(37,31,25,.13);
+    }
+    .panel{height:86vh;min-height:640px;overflow:hidden;position:relative;display:flex;align-items:center;background:#111}
+    .panel img{
+      width:100%;
+      height:130%;
+      object-fit:cover;
+      transform:translate3d(0,var(--parallax,0px),0) scale(calc(1.06 + var(--focus,0) * .035));
+      will-change:transform;
+    }
+    .panel:nth-child(1) img{object-position:center center}
+    .panel:nth-child(2) img{object-position:52% center}
+    .panel:nth-child(3) img{object-position:center center}
+    .panel:nth-child(4) img{object-position:54% center}
+    .notes{max-width:900px;margin:0 auto 96px;padding:0 28px;color:var(--muted);font-size:15px}
+    .notes strong{color:var(--ink)}
+    @media (max-width:900px){
+      .themeBar{grid-template-columns:1fr;height:58px;gap:4px;align-content:center}
+      .themeIntent{display:none}
+      .top{top:74px}
+      .intro{padding:74px 24px 42px;min-height:52vh}
+      .intro p{font-size:24px}
+      .chapter{display:block;padding:0 0 88px;--edgeGap:14px;--clusterRadius:82px}
+      .side{position:relative;top:auto;padding:0 24px 36px}
+      .thesis{font-size:18px}
+      .tags{margin-bottom:24px}
+      .captionBox{min-height:238px}
+      .captionViewport{min-height:168px}
+      .captionText{font-size:22px;line-height:1.36}
+      .cluster{
+        clip-path:none;
+      }
+      .panel{height:74vh;min-height:430px}
+      .panel img{height:124%;scale:1}
+    }
+    @media (max-width:520px){
+      .chapter{--edgeGap:10px;--clusterRadius:72px}
+      h2{font-size:clamp(34px,12vw,52px)}
+      .captionBox{min-height:270px}
+    }
+  </style>
+</head>
+<body>
+  <div class="themeBar" aria-label="Aesthetic switcher">
+    <div class="themeMeta">
+      <strong>Aesthetic lab</strong>
+      <span class="themeIntent" aria-live="polite"></span>
+    </div>
+    <div class="themeButtons" role="tablist" aria-label="Portfolio aesthetic variants"></div>
+  </div>
+  <a class="top" href="index.html">Round 5</a>
+  <header class="intro">
+    <div class="eyebrow">R5-A / polished continuous stack</div>
+    <h1>One clean project object, cropped harder.</h1>
+    <p>The A direction keeps its smooth parallax and uninterrupted image stack, now with mobile-inspired edge offsets and much larger rounded clipping.</p>
+  </header>
+  <main class="chapter">
+    <aside class="side">
+      <h2>Designing Intelligent Interfaces</h2>
+      <p class="thesis">A chapter is one visual rhythm first, then a sequence of evidence.</p>
+      <div class="tags">
+        <span class="tag" style="background:var(--blue)">AI Integration</span>
+        <span class="tag" style="background:var(--teal)">HMI Design</span>
+        <span class="tag" style="background:var(--green)">Research</span>
+        <span class="tag" style="background:var(--purple)">Concept Design</span>
+      </div>
+      <div class="captionBox">
+        <span class="label">Image note</span>
+        <div class="captionViewport">
+          <div class="captionItem" data-index="0"><p class="captionText">Doctoral research treated computation as a design material, testing how concepts, algorithms, parameters, and results could change automotive form-finding.</p><span class="counter">1 / 4</span></div>
+          <div class="captionItem" data-index="1"><p class="captionText">Physical and visual demonstrations made generative methods discussable inside an automotive design context, not only as abstract software output.</p><span class="counter">2 / 4</span></div>
+          <div class="captionItem" data-index="2"><p class="captionText">The assistant story moves from Laura avatar concepting and production animation behavior toward Vision O, where AI becomes part of the cockpit ecosystem.</p><span class="counter">3 / 4</span></div>
+          <div class="captionItem" data-index="3"><p class="captionText">Vibe-coding experiments close the loop by using AI as a collaborator for fast interface thinking and new cockpit-service relationships.</p><span class="counter">4 / 4</span></div>
+        </div>
+      </div>
+    </aside>
+    <section class="track">
+      <div class="cluster" id="project-stack">
+        <article class="panel"><img src="../review-assets/gen-pure-forms-grid.jpg" alt="Generative forms grid"></article>
+        <article class="panel"><img src="../review-assets/gen-slices.jpg" alt="Generative steering wheel slices"></article>
+        <article class="panel"><img src="../review-assets/vision-o-dash-ui.jpg" alt="Vision O dashboard UI"></article>
+        <article class="panel"><img src="../review-assets/vision-o-console.jpg" alt="Vision O console"></article>
+      </div>
+    </section>
+  </main>
+  <p class="notes"><strong>Polish pass:</strong> no gaps within the project, squircle crop, mobile-like edge inset, and radius/gap collapse as the image fills the viewport. <strong>Watch:</strong> captions are smaller and hand off with a slight low-opacity overlap.</p>
+  <script>
+    const themes=[
+      {id:'paper-moss',name:'Paper Moss',intent:'Calm senior HMI portfolio: warm paper, black ink, restrained evidence colors.'},
+      {id:'graphite-signal',name:'Graphite Signal',intent:'Product-system precision with hard display type and controlled signal accents.'},
+      {id:'ceramic-lab',name:'Ceramic Lab',intent:'Quiet research atelier: porcelain surface, humanist type, soft engineered color.'},
+      {id:'nordic-console',name:'Nordic Console',intent:'Cold cockpit clarity: technical typography, blue-gray air, Scandinavian restraint.'},
+      {id:'infrared-studio',name:'Infrared Studio',intent:'High-energy concept studio with warm paper, compressed type, and red signal pressure.'},
+      {id:'night-glass',name:'Night Glass',intent:'Cinematic future-HMI mode: luminous text on dark glass, still sober and readable.'},
+      {id:'greenhouse-code',name:'Greenhouse Code',intent:'Bio-computational intelligence: garden greens meeting parametric research culture.'},
+      {id:'blueprint-atelier',name:'Blueprint Atelier',intent:'Engineering review room: blueprint coolness without becoming corporate software.'},
+      {id:'soft-brutalist',name:'Soft Brutalist',intent:'Raw design confidence: blunt typography softened by old paper and muted color.'},
+      {id:'kyoto-graphite',name:'Kyoto Graphite',intent:'Craft and restraint: washi warmth, graphite ink, one controlled vermilion note.'},
+      {id:'solar-prototype',name:'Solar Prototype',intent:'Optimistic mobility lab: pale sunlight, clean future colors, energetic but not playful.'},
+      {id:'museum-archive',name:'Museum Archive',intent:'Institutional credibility: archival paper, measured color, design-history gravity.'},
+      {id:'field-notes',name:'Field Notes',intent:'Research notebook stance: mono annotations, tactile paper, practical prototype colors.'},
+      {id:'interface-mono',name:'Interface Mono',intent:'AI/system design lens: monospaced evidence, precise contrast, computational discipline.'},
+      {id:'bauhaus-fleet',name:'Bauhaus Fleet',intent:'Modernist automotive energy: primary signals, fleet graphics, disciplined boldness.'},
+      {id:'digital-clay',name:'Digital Clay',intent:'Material experimentation: warm clay surface with digital cobalt/green structure.'},
+      {id:'clinical-lumen',name:'Clinical Lumen',intent:'Ultra-clean executive UX: luminous white, measured type, high trust and focus.'},
+      {id:'electric-editorial',name:'Electric Editorial',intent:'Sharper magazine-like AI story: cool lavender paper, elegant serif, electric accents.'}
+    ];
+    const themeButtons=document.querySelector('.themeButtons');
+    const themeIntent=document.querySelector('.themeIntent');
+    function setTheme(id){
+      const theme=themes.find((item)=>item.id===id)||themes[0];
+      document.body.dataset.theme=theme.id;
+      themeIntent.textContent=theme.intent;
+      document.querySelectorAll('.themeButton').forEach((button)=>{
+        const active=button.dataset.theme===theme.id;
+        button.classList.toggle('isActive',active);
+        button.setAttribute('aria-selected',String(active));
+      });
+      try{localStorage.setItem('portfolio-preview-theme',theme.id)}catch(error){}
+    }
+    themes.forEach((theme)=>{
+      const button=document.createElement('button');
+      button.type='button';
+      button.className='themeButton';
+      button.dataset.theme=theme.id;
+      button.textContent=theme.name;
+      button.title=theme.intent;
+      button.setAttribute('role','tab');
+      button.addEventListener('click',()=>setTheme(theme.id));
+      themeButtons.appendChild(button);
+    });
+    let initialTheme='paper-moss';
+    try{initialTheme=localStorage.getItem('portfolio-preview-theme')||initialTheme}catch(error){}
+    setTheme(initialTheme);
+
+    const chapter=document.querySelector('.chapter');
+    const cluster=document.querySelector('.cluster');
+    const panels=[...document.querySelectorAll('.panel')];
+    const captions=[...document.querySelectorAll('.captionItem')];
+    let ticking=false;
+
+    function clamp(n,min,max){return Math.max(min,Math.min(max,n))}
+    function smooth(t){return t*t*(3-2*t)}
+    function lerp(a,b,t){return a+(b-a)*t}
+
+    function update(){
+      ticking=false;
+      const vh=innerHeight;
+      const center=vh/2;
+      const mobile=matchMedia('(max-width: 900px)').matches;
+      const clusterRect=cluster.getBoundingClientRect();
+      const zone=mobile?130:220;
+      const topCoverage=clamp((-clusterRect.top)/zone,0,1);
+      const bottomCoverage=clamp((clusterRect.bottom-vh)/zone,0,1);
+      const coverage=smooth(Math.min(topCoverage,bottomCoverage));
+      const baseGap=mobile?14:26;
+      const baseRadius=mobile?(innerWidth<520?82:96):188;
+      const gap=baseGap*(1-coverage);
+      const radius=baseRadius*(1-coverage);
+      chapter.style.setProperty('--coverage',coverage.toFixed(3));
+      chapter.style.setProperty('--edgeGap',`${gap.toFixed(1)}px`);
+      chapter.style.setProperty('--clusterRadius',`${radius.toFixed(1)}px`);
+      updateClusterFrame(gap,radius,mobile);
+
+      const mids=[];
+      panels.forEach((panel)=>{
+        const rect=panel.getBoundingClientRect();
+        const mid=rect.top+rect.height/2;
+        const d=Math.abs(mid-center);
+        const focus=clamp(1-d/(vh*.74),0,1);
+        const par=(rect.top-center)*(mobile?-0.19:-0.235);
+        const img=panel.querySelector('img');
+        img.style.setProperty('--parallax',`${par.toFixed(1)}px`);
+        img.style.setProperty('--focus',focus.toFixed(3));
+        mids.push(mid);
+      });
+
+      updateCaptions(mids,center,mobile);
+    }
+
+    function squirclePath(w,h,c){
+      if(c<=.5)return `M 0 0 L ${w} 0 L ${w} ${h} L 0 ${h} Z`;
+      const e=c*1.6;
+      const d=c*.6;
+      const ex=Math.min(e,w/2);
+      const ey=Math.min(e,h/2);
+      const ratio=e>0?Math.min(ex,ey)/e:1;
+      const dx=d*ratio;
+      const dy=d*ratio;
+      return [
+        `M ${ex} 0`,
+        `L ${w-ex} 0`,
+        `C ${w-dx} 0 ${w} ${dy} ${w} ${ey}`,
+        `L ${w} ${h-ey}`,
+        `C ${w} ${h-dy} ${w-dx} ${h} ${w-ex} ${h}`,
+        `L ${ex} ${h}`,
+        `C ${dx} ${h} 0 ${h-dy} 0 ${h-ey}`,
+        `L 0 ${ey}`,
+        `C 0 ${dy} ${dx} 0 ${ex} 0`,
+        'Z'
+      ].join(' ');
+    }
+
+    function updateClusterFrame(gap,radius,mobile){
+      if(mobile){
+        cluster.style.width=`calc(100% - ${(gap*2).toFixed(1)}px)`;
+        cluster.style.margin=`0 ${gap.toFixed(1)}px`;
+      }else{
+        const trackLeft=cluster.parentElement.getBoundingClientRect().left;
+        const width=Math.max(360,innerWidth-trackLeft-gap);
+        cluster.style.width=`${width.toFixed(1)}px`;
+        cluster.style.marginRight=`${gap.toFixed(1)}px`;
+      }
+      const w=cluster.offsetWidth;
+      const h=cluster.offsetHeight;
+      if(w>0&&h>0){
+        cluster.style.clipPath=`path("${squirclePath(w,h,radius)}")`;
+      }
+    }
+
+    function hideCaption(caption,travel){
+      caption.style.opacity='0';
+      caption.style.transform=`translate3d(0,${travel.toFixed(1)}px,0)`;
+    }
+
+    function showCaption(caption){
+      caption.style.opacity='1';
+      caption.style.transform='translate3d(0,0,0)';
+    }
+
+    function updateCaptions(mids,center,mobile){
+      const travel=mobile?96:112;
+      const bandStart=.03;
+      const bandEnd=.97;
+      captions.forEach((caption)=>hideCaption(caption,travel));
+
+      if(captions.length===1){
+        showCaption(captions[0]);
+        return;
+      }
+
+      for(let i=0;i<mids.length-1;i++){
+        const gap=mids[i+1]-mids[i];
+        if(gap<=0)continue;
+        const raw=(center-mids[i])/gap;
+        if(raw>=bandStart&&raw<=bandEnd){
+          const t=(raw-bandStart)/(bandEnd-bandStart);
+          const out=smooth(clamp(t/.56,0,1));
+          const incoming=smooth(clamp((t-.44)/.56,0,1));
+          captions[i].style.opacity=(1-out).toFixed(3);
+          captions[i].style.transform=`translate3d(0,${(-travel*out).toFixed(1)}px,0)`;
+          captions[i+1].style.opacity=incoming.toFixed(3);
+          captions[i+1].style.transform=`translate3d(0,${(travel*(1-incoming)).toFixed(1)}px,0)`;
+          return;
+        }
+      }
+
+      let active=0;
+      for(let i=0;i<mids.length-1;i++){
+        const gap=mids[i+1]-mids[i];
+        if(gap<=0)continue;
+        const raw=(center-mids[i])/gap;
+        if(raw>bandEnd)active=i+1;
+      }
+      showCaption(captions[active]);
+    }
+
+    addEventListener('scroll',()=>{if(!ticking){ticking=true;requestAnimationFrame(update)}},{passive:true});
+    addEventListener('resize',update);
+    update();
+  </script>
+</body>
+</html>
